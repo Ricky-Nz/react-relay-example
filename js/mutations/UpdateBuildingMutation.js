@@ -16,11 +16,7 @@ export default class UpdateBuildingMutation extends Relay.Mutation {
 			fragment on UpdateBuildingPayload {
 				building {
 					id,
-					title,
-					index,
-					description,
-					labels,
-					thumbnail
+					name
 				}
 			}
 		`;
@@ -36,9 +32,13 @@ export default class UpdateBuildingMutation extends Relay.Mutation {
 	getVariables() {
 		return {
 			id: this.props.building.id,
-			title: this.props.title,
+			name: this.props.name,
 			index: this.props.index,
-			description: this.props.description,
+			location: this.props.location,
+			type: this.props.type,
+			area: this.props.area,
+			status: this.props.status,
+			segments: this.props.segments,
 			labels: this.props.labels
 		};
 	}

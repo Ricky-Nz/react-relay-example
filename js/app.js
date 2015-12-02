@@ -7,18 +7,16 @@ import { IndexRoute, Route } from 'react-router';
 import { RelayRouter } from 'react-router-relay';
 import { createHashHistory } from 'history';
 
-import RootQueries from './queries/RootQueries';
+import ConsoleQueries from './queries/ConsoleQueries';
 
 import Root from './components/Root';
-import BuildingList from './components/BuildingList';
-import BuildingEditor from './components/BuildingEditor';
+import BackendConsole from './components/BackendConsole';
 
 ReactDOM.render(
 	<RelayRouter history={createHashHistory({ queryKey: false })}>
 		<Route path='/' component={Root}>
-			<IndexRoute component={BuildingList} queries={RootQueries}/>
-			<Route path='/editor' component={BuildingEditor}
-				queries={RootQueries}/>
+			<Route path='/console/:username' component={BackendConsole}
+				queries={ConsoleQueries} queryParams={['select']}/>
 		</Route>
 	</RelayRouter>,
 	document.getElementById('root')

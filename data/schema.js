@@ -6,6 +6,7 @@ import {
 	GraphQLList,
 	GraphQLNonNull,
 	GraphQLObjectType,
+	GraphQLInputObjectType,
 	GraphQLSchema,
 	GraphQLString,
 } from 'graphql';
@@ -60,22 +61,75 @@ var {nodeInterface, nodeField} = nodeDefinitions(
 	}
 );
 
+var GraphQLSegment = new GraphQLObjectType({
+	name: 'Segment',
+	description: 'Building description segment',
+	fields: () => ({
+		title: {
+			type: GraphQLString
+		},
+		content: {
+			type: GraphQLString
+		},
+		images: {
+			type: new GraphQLList(GraphQLString)
+		},
+		mode: {
+			type: GraphQLString
+		}
+	})
+});
+
+var GraphQLSegmentInput = new GraphQLInputObjectType({
+	name: 'SegmentInput',
+	description: 'Building description segment',
+	fields: () => ({
+		title: {
+			type: GraphQLString
+		},
+		content: {
+			type: GraphQLString
+		},
+		images: {
+			type: new GraphQLList(GraphQLString)
+		},
+		mode: {
+			type: GraphQLString
+		}
+	})
+});
+
 var GraphQLBuilding = new GraphQLObjectType({
 	name: 'Building',
 	description: 'User buildings',
 	fields: () => ({
 		id: globalIdField('Building', (obj) => obj._id),
-		title: {
+		name: {
 			type: GraphQLString
 		},
 		index: {
 			type: GraphQLString
 		},
-		description: {
+		location: {
+			type: GraphQLString
+		},
+		type: {
+			type: GraphQLString
+		},
+		area: {
+			type: GraphQLString
+		},
+		status: {
+			type: GraphQLString
+		},
+		banner: {
 			type: GraphQLString
 		},
 		thumbnail: {
 			type: GraphQLString
+		},
+		segments: {
+			type: new GraphQLList(GraphQLSegment)
 		},
 		labels: {
 			type: new GraphQLList(GraphQLString)
@@ -122,9 +176,19 @@ var queryType = new GraphQLObjectType({
 					type: new GraphQLNonNull(GraphQLString)
 				}
 			},
-			resolve: (root, {name}) => {
-				return findUserByName(name)
-					.then(user => user);
+			resolve: (root, {name}) =>
+				findUserByName(name).then(user => user)
+		},
+		building: {
+			type: GraphQLBuilding,
+			args: {
+				id: {
+					type: new GraphQLNonNull(GraphQLID)
+				}
+			},
+			resolve: (root, {id}) => {
+				const {type, id: localId} = fromGlobalId(id);
+				return findBuildingById(localId).then(building => building);
 			}
 		},
 		node: nodeField
@@ -162,14 +226,26 @@ var createBuildingMutation = mutationWithClientMutationId({
 		userId: {
 			type: new GraphQLNonNull(GraphQLID)
 		},
-		title: {
+		name: {
 			type: new GraphQLNonNull(GraphQLString)
 		},
 		index: {
-			type: new GraphQLNonNull(GraphQLString)
+			type: GraphQLString,
 		},
-		description: {
+		location: {
 			type: GraphQLString
+		},
+		type: {
+			type: GraphQLString
+		},
+		area: {
+			type: GraphQLString
+		},
+		status: {
+			type: GraphQLString
+		},
+		segments: {
+			type: new GraphQLList(GraphQLSegmentInput)
 		},
 		labels: {
 			type: new GraphQLList(GraphQLString)
@@ -196,10 +272,10 @@ var createBuildingMutation = mutationWithClientMutationId({
 			}
 		}
 	},
-	mutateAndGetPayload: ({userId, title, index, description, labels}, {rootValue}) => {
-		const file = rootValue.request.file;
+	mutateAndGetPayload: ({userId, ...fields}, {rootValue}) => {
+		console.log(rootValue.request);
 		const {type, id} = fromGlobalId(userId);
-		return createBuilding(id, title, index, description, file&&file.path, labels)
+		return createBuilding({userId: id, ...fields})
 			.then(building => ({
 				buildingId: building._id,
 				userId: id
@@ -213,33 +289,42 @@ var updateBuildingMutation = mutationWithClientMutationId({
 		id: {
 			type: new GraphQLNonNull(GraphQLID)
 		},
-		title: {
-			type: GraphQLString
+		name: {
+			type: new GraphQLNonNull(GraphQLString)
 		},
 		index: {
+			type: GraphQLString,
+		},
+		location: {
 			type: GraphQLString
 		},
-		description: {
+		type: {
 			type: GraphQLString
+		},
+		area: {
+			type: GraphQLString
+		},
+		status: {
+			type: GraphQLString
+		},
+		segments: {
+			type: new GraphQLList(GraphQLSegmentInput)
 		},
 		labels: {
-			type: GraphQLString
+			type: new GraphQLList(GraphQLString)
 		}
 	},
 	outputFields: {
 		building: {
 			type: GraphQLBuilding,
-			resolve: ({buildingId}) => findBuildingById(buildingId)
+			resolve: (buildingId) => findBuildingById(buildingId)
 				.then(building => building)
 		}
 	},
-	mutateAndGetPayload: ({id, title, index, description, labels}, {rootValue}) => {
-		const {type, id: localId} = fromGlobalId(id);
-		const file = rootValue.request.file;
-		return updateBuilding(localId, title, index, description, file&&file.path, labels)
-			.then(building => ({
-				buildingId: building._id
-			}));
+	mutateAndGetPayload: ({id, ...fields}, {rootValue}) => {
+		const {type, id: buildingId} = fromGlobalId(id);
+		return updateBuilding({id: buildingId, ...fields})
+			.then(building => building._id);
 	}
 });
 

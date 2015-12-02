@@ -15,12 +15,9 @@ var graphQLServer = express();
 var storage = multer.diskStorage({
 	destination: function(req, file, cb) {
 		cb(null, 'uploads/')
-	},
-	dilename: function(req, file, cb) {
-		cb(null. file.filename + '-' + Date.now())
 	}
 });
-graphQLServer.use('/', multer({ storage }).single('file'));
+graphQLServer.use('/', multer({ storage }).any());
 graphQLServer.use('/', graphQLHTTP(req => {
 	return {
 		schema: schema,

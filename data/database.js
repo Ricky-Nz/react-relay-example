@@ -1,11 +1,23 @@
 import mongoose, { Schema } from 'mongoose';
 
+var SegmentSchema = new Schema({
+	title: { type: String },
+	content: { type: String },
+	images: [String],
+	mode: { type: String }
+});
+
 export var DBBuilding = mongoose.model('DBBuilding', new Schema({
 	userId: { type: Schema.Types.ObjectId, required: true },
-	title: { type: String, required: true },
-	index: { type: String, required: true },
-	description: { type: String },
+	name: { type: String, required: true },
+	index: { type: String },
+	location: { type: String },
+	type: { type: String },
+	area: { type: String },
+	status: { type: String },
+	banner: { type: String },
 	thumbnail: { type: String },
+	segments: [SegmentSchema],
 	labels: [String]
 }));
 
@@ -35,34 +47,13 @@ export function createUser(name) {
 	return user.save();
 }
 
-export function createBuilding(userId, title, index, description, thumbnail, labels) {
+export function createBuilding(fields) {
 	var building = new DBBuilding();
-	building.userId = userId;
-	building.title = title;
-	building.index = index;
-	building.description = description;
-	building.thumbnail = thumbnail;
-	building.labels = labels;
+	Object.assign(building, fields);
 	return building.save();
 };
 
-export function updateBuilding(id, title, index, description, thumbnail, labels) {
-	let updateFields = {};
-	if (typeof title !== 'undefined') {
-		updateFields.title = title;
-	}
-	if (typeof index !== 'undefined') {
-		updateFields.index = index;
-	}
-	if (typeof description !== 'undefined') {
-		updateFields.description = description;
-	}
-	if (typeof thumbnail !== 'undefined') {
-		updateFields.thumbnail = thumbnail;
-	}
-	if (typeof labels !== 'undefined') {
-		updateFields.labels = labels;
-	}
+export function updateBuilding({id, ...updateFields}) {
 	return DBBuilding.findOneAndUpdate({_id: id}, updateFields, {'new': true}).exec();
 }
 

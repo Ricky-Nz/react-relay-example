@@ -35,16 +35,18 @@ export default class CreateBuildingMutation extends Relay.Mutation {
 	}
 	getVariables() {
 		return {
-			userId: this.props.userId,
-			title: this.props.title,
+			userId: this.props.user.id,
+			name: this.props.name,
 			index: this.props.index,
-			description: this.props.description,
+			location: this.props.location,
+			type: this.props.type,
+			area: this.props.area,
+			status: this.props.status,
+			segments: this.props.segments,
 			labels: this.props.labels
 		};
 	}
 	getFiles() {
-		return {
-			file: this.props.file
-		};
+		return this.props.fileMap;
 	}
 }

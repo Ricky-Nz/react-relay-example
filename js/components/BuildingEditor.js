@@ -1,45 +1,103 @@
 import React from 'react';
 import Relay from 'react-relay';
-import {Input, Button, Row, Col, Label, ListGroup, ListGroupItem } from 'react-bootstrap';
-import {GnSelectableTags} from './elements';
-import Dropzone from 'react-dropzone';
+import { Input, Button } from 'react-bootstrap';
+import { GnSelectableTags } from './elements';
 import { CreateBuildingMutation, UpdateBuildingMutation, RemoveBuildingMutation } from '../mutations';
 import _ from 'underscore';
 
 class BuildingEditor extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			newTag: '',
-			labels: []
+	componentDidMount() {
+		this._onRefreshEditor(this.props);
+	}
+	componentWillReceiveProps(nextProps) {
+		this._onRefreshEditor(nextProps);
+	}
+	render() {
+		const bottombar = {
+			display: 'flex',
+			flexDirection: 'row',
+			alignItems: 'flex-end',
+			justifyContent: 'space-between'
 		};
-	}
-	_onFileSelect(files) {
-		this.setState({
-			file: files[0]
+		const buildingItems = this.props.user.buildings.edges.map(({node}, index) => {
+			return (
+				<ListGroupItem key={index} href={`#/editor?select=${node.id}`}>
+					{node.name}
+				</ListGroupItem>
+			);
 		});
-	}
-	_onTagInputChange(e) {
-		this.setState({
-			newTag: e.target.value
+		const editFields = [
+			{name: 'Name', type: 'text'},
+			{name: 'Index', type: 'text'},
+			{name: 'Location', type: 'text'},
+			{name: 'Type', type: 'text'},
+			{name: 'Area', type: 'text'},
+			{name: 'Status', type: 'text'},
+			{name: 'Banner', type: 'file'},
+			{name: 'Thumbnail', type: 'file'}
+		];
+		const editFieldViews = editFields.map((field, index) => {
+			const lowerCase = field.name.toLowerCase();
+			return (
+				<Input key={index} type={field.type} placeholder={`building ${lowerCase}`}
+					label={field.name} value={this.state[lowerCase]} onChange={this._onInputChanged.bind(this, lowerCase)}/>
+			);
 		});
+
+		return (
+			<div>
+				{editFieldViews}
+				<GnSelectableTags ref='tags' labels={this.state.labels}/>
+				<Row>
+					<Col xs={6}>
+						<Input type='text' placeholder='tag name' label='New Tag' value={this.state.newTag}
+							onChange={this._onInputChanged.bind(this, 'newTag')} buttonAfter={<Button onClick={this._onNewTag.bind(this)}>Add</Button>}/>
+					</Col>
+				</Row>
+				<div style={bottombar}>
+					<div>
+						{this.props.building&&<Button bsStyle='danger' onClick={this._onDelete.bind(this)}>Delete</Button>}
+						<Button bsStyle='primary' onClick={this._onSubmit.bind(this)}>Submit</Button>
+					</div>
+				</div>
+			</div>
+		);
 	}
-	_onTitleChange(e) {
+	_onRefreshEditor(props) {
+		if (props.building) {
+			this.setState({
+				name: props.building.name,
+				index: props.building.index,
+				location: props.building.location,
+				type: props.building.type,
+				area: props.building.area,
+				status: props.building.status,
+				banner: props.building.banner,
+				thumbnail: props.building.thumbnail,
+				labels: props.building.labels,
+				segments: props.building.segments
+			});
+		} else {
+			this.setState({
+				name: '',
+				index: '',
+				location: '',
+				type: '',
+				area: '',
+				status: '',
+				banner: '',
+				thumbnail: '',
+				labels: [],
+				segments: []
+			});
+		}
+	}
+	_onInputChanged(fieldName, e) {
 		this.setState({
-			title: e.target.value
-		});
+			[fieldName]: e.target.files||e.target.value
+		})
 	}
-	_onIndexChange(e) {
-		this.setState({
-			index: e.target.value
-		});
-	}
-	_onDescriptionChange(e) {
-		this.setState({
-			description: e.target.value
-		});
-	}
-	_onAddNewTag() {
+	_onNewTag() {
 		if (this.state.labels.indexOf(this.state.newTag) < 0) {
 			this.setState({
 				labels: [...this.state.labels, this.state.newTag],
@@ -54,8 +112,8 @@ class BuildingEditor extends React.Component {
 	_onSubmit() {
 		if (this.state.selectBuilding) {
 			Relay.Store.update(new UpdateBuildingMutation({
-				building: this.state.selectBuilding,
-				title: this.state.title,
+				building: this.props.building,
+				name: this.state.name,
 				index: this.state.index,
 				description: this.state.description,
 				labels: this.refs.tags.getSelection(),
@@ -64,7 +122,7 @@ class BuildingEditor extends React.Component {
 		} else {
 			Relay.Store.update(new CreateBuildingMutation({
 				userId: this.props.user.id,
-				title: this.state.title,
+				name: this.state.name,
 				index: this.state.index,
 				description: this.state.description,
 				labels: this.refs.tags.getSelection(),
@@ -73,114 +131,11 @@ class BuildingEditor extends React.Component {
 			}));
 		}
 	}
-	_onPropsChanges(props) {
-		const selectUser = props.location.query.select
-			&&_.find(props.user.buildings.edges, ({node}) => node.id === props.location.query.select);
-		if (selectUser) {
-			const node = selectUser.node;
-			this.setState({
-				selectBuilding: node,
-				title: node.title,
-				index: node.index,
-				description: node.description,
-				thumbnail: node.thumbnail,
-				file: null,
-				labels: node.labels,
-				newTag: ''
-			});
-		} else {
-			this.setState({
-				selectBuilding: null,
-				title: '',
-				index: '',
-				description: '',
-				thumbnail: '',
-				file: null,
-				labels: [],
-				newTag: ''
-			});
-		}
-	}
 	_onDelete() {
 		Relay.Store.update(new RemoveBuildingMutation({
-			building: this.state.selectBuilding,
+			building: this.props.building,
 			user: this.props.user
 		}));
-	}
-	componentDidMount() {
-		this._onPropsChanges(this.props);
-	}
-	componentWillReceiveProps(nextProps) {
-		if (nextProps.location.query.select !== this.props.location.query.select) {
-			this._onPropsChanges(nextProps);
-		}
-	}
-	render() {
-		const content = {
-			width: '100%',
-			height: '100%',
-			display: 'flex',
-			justifyContent: 'center',
-			alignItems: 'center',
-			padding: 4
-		};
-		const hint = {
-			textAlign: 'center'
-		};
-		const image = {
-			width: '100%'
-		};
-		const bottombar = {
-			display: 'flex',
-			flexDirection: 'row',
-			alignItems: 'flex-end',
-			justifyContent: 'space-between'
-		};
-
-		const buildingItems = this.props.user.buildings.edges.map(({node}, index) => {
-			return (
-				<ListGroupItem key={index} href={`#/editor?select=${node.id}`}>
-					{node.title}
-				</ListGroupItem>
-			);
-		});
-
-		return (
-			<Row>
-				<Col sm={4} smOffset={1} md={3} mdOffset={2}>
-					<ListGroup>
-						{buildingItems}
-					</ListGroup>
-				</Col>
-				<Col sm={6} md={5}>
-					<Input type='text' placeholder='building title'
-						label='Title' value={this.state.title} onChange={this._onTitleChange.bind(this)}/>
-					<Input type='text' placeholder='building index'
-						label='Index' value={this.state.index} onChange={this._onIndexChange.bind(this)}/>
-					<Input type='textarea' placeholder='building description'
-						label='Description' value={this.state.description} onChange={this._onDescriptionChange.bind(this)}/>
-					<Row>
-						<Col xs={6}>
-							<Input type='text' placeholder='tag name' label='New Tag' value={this.state.newTag}
-								onChange={this._onTagInputChange.bind(this)} buttonAfter={<Button onClick={this._onAddNewTag.bind(this)}>Add</Button>}/>
-						</Col>
-					</Row>
-					<GnSelectableTags ref='tags' labels={this.state.labels}/>
-					<div style={bottombar}>
-						<Dropzone onDrop={this._onFileSelect.bind(this)}>
-							<div style={content}>
-								{this.state.file?<img style={image} src={this.state.file.preview}/>
-									:<p style={hint}>Drop file here or click to select.</p>}
-							</div>
-						</Dropzone>
-						<div>
-							{this.state.selectBuilding&&<Button bsStyle='danger' onClick={this._onDelete.bind(this)}>Delete</Button>}
-							<Button bsStyle='primary' onClick={this._onSubmit.bind(this)}>Submit</Button>
-						</div>
-					</div>
-				</Col>
-			</Row>
-		);
 	}
 }
 
@@ -188,23 +143,13 @@ export default Relay.createContainer(BuildingEditor, {
 	fragments: {
 		user: () => Relay.QL`
 			fragment on User {
-				id,
-				buildings(first: 10) {
-					edges {
-						node {
-							id,
-							title,
-							index,
-							description,
-							thumbnail,
-							labels,
-							${RemoveBuildingMutation.getFragment('building')}
-							${UpdateBuildingMutation.getFragment('building')}
-						}
-					}
-				},
 				${CreateBuildingMutation.getFragment('user')},
 				${RemoveBuildingMutation.getFragment('user')},
+			}
+		`,
+		building: (variables) => Relay.QL`
+			fragment on Building {
+				${UpdateBuildingMutation.getFragment('building').if(variables.selectId)}
 			}
 		`
 	}
