@@ -16,7 +16,14 @@ export default class UpdateBuildingMutation extends Relay.Mutation {
 			fragment on UpdateBuildingPayload {
 				building {
 					id,
-					name
+					name,
+					index,
+					location,
+					type,
+					area,
+					status,
+					segments,
+					labels
 				}
 			}
 		`;
@@ -43,9 +50,7 @@ export default class UpdateBuildingMutation extends Relay.Mutation {
 		};
 	}
 	getFiles() {
-		return {
-			file: this.props.file
-		};
+		return this.props.fileMap;
 	}
 }
 

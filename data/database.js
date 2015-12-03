@@ -47,13 +47,30 @@ export function createUser(name) {
 	return user.save();
 }
 
-export function createBuilding(fields) {
+function assignFiles(fields, files) {
+	if (!files) {
+		return;
+	}
+
+	files.forEach(file => {
+		if (file.fieldname === 'banner') {
+			fields.banner = file.path;
+		}
+		if (file.fieldname === 'thumbnail') {
+			fields.thumbnail = file.path;
+		}
+	});
+}
+
+export function createBuilding(fields, files) {
+	assignFiles(fields, files);
 	var building = new DBBuilding();
 	Object.assign(building, fields);
 	return building.save();
 };
 
-export function updateBuilding({id, ...updateFields}) {
+export function updateBuilding({id, ...updateFields}, files) {
+	assignFiles(updateFields, files);
 	return DBBuilding.findOneAndUpdate({_id: id}, updateFields, {'new': true}).exec();
 }
 

@@ -1,16 +1,19 @@
 import React from 'react';
 import Relay from 'react-relay';
 import { Row, Col } from 'react-bootstrap';
+import BuildingList from './BuildingList'
 import BuildingEditor from './BuildingEditor';
 
 class BackendConsole extends React.Component {
 	render() {
+		const { user, building } = this.props.app;
 		return (
 			<Row>
 				<Col xs={3} xsOffset={1}>
+					<BuildingList user={user}/>
 				</Col>
 				<Col xs={7}>
-					<BuildingEditor user={this.props.user}/>
+					<BuildingEditor user={user} building={building||null}/>
 				</Col>
 			</Row>
 		);
@@ -18,15 +21,21 @@ class BackendConsole extends React.Component {
 }
 
 export default Relay.createContainer(BackendConsole, {
+	initialVariables: {
+		username: null,
+		select: null,
+		fetchBuilding: true
+	},
 	fragments: {
-		user: () => Relay.QL`
-			fragment on User {
-				${BuildingEditor.getFragment('user')}
-			}
-		`,
-		building: () => Relay.QL`
-			fragment on Building {
-				${BuildingEditor.getFragment('building')}
+		app: () => Relay.QL`
+			fragment on App {
+				user(name: $username) {
+					${BuildingList.getFragment('user')},
+					${BuildingEditor.getFragment('user')}
+				},
+				building(id: $select) @include(if: $fetchBuilding) {
+					${BuildingEditor.getFragment('building')}
+				}
 			}
 		`
 	}

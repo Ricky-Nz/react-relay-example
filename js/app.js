@@ -8,15 +8,24 @@ import { RelayRouter } from 'react-router-relay';
 import { createHashHistory } from 'history';
 
 import ConsoleQueries from './queries/ConsoleQueries';
-
-import Root from './components/Root';
 import BackendConsole from './components/BackendConsole';
+
+class Root extends React.Component {
+	render() {
+		return (
+			<div>
+				{this.props.children}
+			</div>
+		);
+	}
+}
 
 ReactDOM.render(
 	<RelayRouter history={createHashHistory({ queryKey: false })}>
 		<Route path='/' component={Root}>
 			<Route path='/console/:username' component={BackendConsole}
-				queries={ConsoleQueries} queryParams={['select']}/>
+				queries={ConsoleQueries} queryParams={['select']}
+				prepareParams={(params, route) => ({...params, fetchBuilding: params.select ? true : false})}/>
 		</Route>
 	</RelayRouter>,
 	document.getElementById('root')

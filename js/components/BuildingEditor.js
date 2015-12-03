@@ -1,11 +1,15 @@
 import React from 'react';
 import Relay from 'react-relay';
-import { Input, Button } from 'react-bootstrap';
+import { Input, Button, Row, Col } from 'react-bootstrap';
 import { GnSelectableTags } from './elements';
 import { CreateBuildingMutation, UpdateBuildingMutation, RemoveBuildingMutation } from '../mutations';
 import _ from 'underscore';
 
 class BuildingEditor extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {};
+	}
 	componentDidMount() {
 		this._onRefreshEditor(this.props);
 	}
@@ -19,13 +23,6 @@ class BuildingEditor extends React.Component {
 			alignItems: 'flex-end',
 			justifyContent: 'space-between'
 		};
-		const buildingItems = this.props.user.buildings.edges.map(({node}, index) => {
-			return (
-				<ListGroupItem key={index} href={`#/editor?select=${node.id}`}>
-					{node.name}
-				</ListGroupItem>
-			);
-		});
 		const editFields = [
 			{name: 'Name', type: 'text'},
 			{name: 'Index', type: 'text'},
@@ -40,14 +37,14 @@ class BuildingEditor extends React.Component {
 			const lowerCase = field.name.toLowerCase();
 			return (
 				<Input key={index} type={field.type} placeholder={`building ${lowerCase}`}
-					label={field.name} value={this.state[lowerCase]} onChange={this._onInputChanged.bind(this, lowerCase)}/>
+					label={field.name} value={field.type == 'text' ? this.state[lowerCase] : undefined} onChange={this._onInputChanged.bind(this, lowerCase)}/>
 			);
 		});
 
 		return (
 			<div>
 				{editFieldViews}
-				<GnSelectableTags ref='tags' labels={this.state.labels}/>
+				<GnSelectableTags ref='tags' labels={this.state.labels||[]}/>
 				<Row>
 					<Col xs={6}>
 						<Input type='text' placeholder='tag name' label='New Tag' value={this.state.newTag}
@@ -94,7 +91,7 @@ class BuildingEditor extends React.Component {
 	}
 	_onInputChanged(fieldName, e) {
 		this.setState({
-			[fieldName]: e.target.files||e.target.value
+			[fieldName]: e.target.files[0]||e.target.value
 		})
 	}
 	_onNewTag() {
@@ -110,24 +107,31 @@ class BuildingEditor extends React.Component {
 		}
 	}
 	_onSubmit() {
-		if (this.state.selectBuilding) {
+		var fields = {
+			name: this.state.name,
+			index: this.state.index,
+			location: this.state.location,
+			type: this.state.type,
+			area: this.state.area,
+			status: this.state.status,
+			labels: this.state.labels,
+			segments: this.state.segments,
+			fileMap: {}
+		};
+		if (this.state.banner) {
+			fields.fileMap.banner = this.state.banner
+		}
+		if (this.state.thumbnail) {
+			fields.fileMap.thumbnail = this.state.thumbnail
+		}
+
+		if (this.props.building) {
 			Relay.Store.update(new UpdateBuildingMutation({
-				building: this.props.building,
-				name: this.state.name,
-				index: this.state.index,
-				description: this.state.description,
-				labels: this.refs.tags.getSelection(),
-				file: this.state.file||null
+				building: this.props.building, ...fields
 			}));
 		} else {
 			Relay.Store.update(new CreateBuildingMutation({
-				userId: this.props.user.id,
-				name: this.state.name,
-				index: this.state.index,
-				description: this.state.description,
-				labels: this.refs.tags.getSelection(),
-				file: this.state.file,
-				user: this.props.user
+				userId: this.props.user.id, ...fields
 			}));
 		}
 	}
@@ -140,16 +144,36 @@ class BuildingEditor extends React.Component {
 }
 
 export default Relay.createContainer(BuildingEditor, {
+	initialVariables: {
+		selectId: false
+	},
 	fragments: {
 		user: () => Relay.QL`
 			fragment on User {
+				id,
 				${CreateBuildingMutation.getFragment('user')},
 				${RemoveBuildingMutation.getFragment('user')},
 			}
 		`,
-		building: (variables) => Relay.QL`
+		building: () => Relay.QL`
 			fragment on Building {
-				${UpdateBuildingMutation.getFragment('building').if(variables.selectId)}
+				id,
+				name,
+				index,
+				location,
+				type,
+				area,
+				status,
+				banner,
+				thumbnail,
+				labels,
+				segments {
+					title,
+					content,
+					images,
+					mode
+				},
+				${UpdateBuildingMutation.getFragment('building')}
 			}
 		`
 	}

@@ -166,8 +166,9 @@ var GraphQLUser = new GraphQLObjectType({
 	interfaces: [nodeInterface]
 });
 
-var queryType = new GraphQLObjectType({
-	name: 'Query',
+var GraphQLApp = new GraphQLObjectType({
+	name: 'App',
+	description: 'Root object',
 	fields: () => ({
 		user: {
 			type: GraphQLUser,
@@ -176,7 +177,7 @@ var queryType = new GraphQLObjectType({
 					type: new GraphQLNonNull(GraphQLString)
 				}
 			},
-			resolve: (root, {name}) =>
+			resolve: (app, {name}) =>
 				findUserByName(name).then(user => user)
 		},
 		building: {
@@ -190,8 +191,17 @@ var queryType = new GraphQLObjectType({
 				const {type, id: localId} = fromGlobalId(id);
 				return findBuildingById(localId).then(building => building);
 			}
-		},
-		node: nodeField
+		}
+	})
+});
+
+var queryType = new GraphQLObjectType({
+	name: 'Query',
+	fields: () => ({
+		app: {
+			type: GraphQLApp,
+			resolve: (root) => ({})
+		}
 	})
 });
 
@@ -273,9 +283,8 @@ var createBuildingMutation = mutationWithClientMutationId({
 		}
 	},
 	mutateAndGetPayload: ({userId, ...fields}, {rootValue}) => {
-		console.log(rootValue.request);
 		const {type, id} = fromGlobalId(userId);
-		return createBuilding({userId: id, ...fields})
+		return createBuilding({userId: id, ...fields}, rootValue.request.files)
 			.then(building => ({
 				buildingId: building._id,
 				userId: id
@@ -323,7 +332,7 @@ var updateBuildingMutation = mutationWithClientMutationId({
 	},
 	mutateAndGetPayload: ({id, ...fields}, {rootValue}) => {
 		const {type, id: buildingId} = fromGlobalId(id);
-		return updateBuilding({id: buildingId, ...fields})
+		return updateBuilding({id: buildingId, ...fields}, rootValue.request.files)
 			.then(building => building._id);
 	}
 });
