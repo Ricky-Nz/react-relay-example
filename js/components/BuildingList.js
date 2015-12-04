@@ -1,22 +1,26 @@
 import React from 'react';
 import Relay from 'react-relay';
-import { Row, Col, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { Link } from 'react-router';
+import { Row, Col, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
 import _ from 'underscore';
 
 class BuildingList extends React.Component {
 	render() {
 		const buildingItems = this.props.user.buildings.edges.map(({node}, index) => {
 			return (
-				<ListGroupItem key={index} href={`#/console/${this.props.user.name}?select=${node.id}`}>
+				<ListGroupItem key={index} href={`#/console?username=${this.props.user.name}&select=${node.id}`}>
 					{node.name}
 				</ListGroupItem>
 			);
 		});
 
 		return (
-			<ListGroup>
-				{buildingItems}
-			</ListGroup>
+			<div>
+				<Button><Link to={`/console?username=${this.props.user.name}`}>New</Link></Button>
+				<ListGroup>
+					{buildingItems}
+				</ListGroup>
+			</div>
 		);
 	}
 }

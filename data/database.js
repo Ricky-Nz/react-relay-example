@@ -11,6 +11,7 @@ export var DBBuilding = mongoose.model('DBBuilding', new Schema({
 	userId: { type: Schema.Types.ObjectId, required: true },
 	name: { type: String, required: true },
 	index: { type: String },
+	promote: { type: Number },
 	location: { type: String },
 	type: { type: String },
 	area: { type: String },
@@ -27,6 +28,10 @@ export var DBUser = mongoose.model('DBUser', new Schema({
 
 export function findBuildingsByUser(userId) {
 	return DBBuilding.find({userId}).exec();
+}
+
+export function findPromoteBuildingsByUser(userId) {
+	return DBBuilding.find({userId, promote: { $gt: 0 }}).sort('promote');
 }
 
 export function findBuildingById(id) {
@@ -58,6 +63,16 @@ function assignFiles(fields, files) {
 		}
 		if (file.fieldname === 'thumbnail') {
 			fields.thumbnail = file.path;
+		}
+		const segmentIndexes = file.fieldname.split('-');
+		if (segmentIndexes&&segmentIndexes.length === 3) {
+			const segmentIndex = segmentIndexes[1];
+			const imageIndex = segmentIndexes[2];
+			let segment = fields.segments[segmentIndex];
+			if (!segment.images) {
+				segment.images = [];
+			}
+			segment.images[imageIndex] = file.path;
 		}
 	});
 }

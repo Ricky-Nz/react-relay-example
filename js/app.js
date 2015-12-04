@@ -7,7 +7,8 @@ import { IndexRoute, Route } from 'react-router';
 import { RelayRouter } from 'react-router-relay';
 import { createHashHistory } from 'history';
 
-import ConsoleQueries from './queries/ConsoleQueries';
+import RootQueries from './queries/RootQueries';
+import MainPage from './components/MainPage';
 import BackendConsole from './components/BackendConsole';
 
 class Root extends React.Component {
@@ -23,8 +24,10 @@ class Root extends React.Component {
 ReactDOM.render(
 	<RelayRouter history={createHashHistory({ queryKey: false })}>
 		<Route path='/' component={Root}>
-			<Route path='/console/:username' component={BackendConsole}
-				queries={ConsoleQueries} queryParams={['select']}
+			<IndexRoute component={MainPage} queries={RootQueries}
+				queryParams={['username']}/>
+			<Route path='/console' component={BackendConsole}
+				queries={RootQueries} queryParams={['username', 'select']}
 				prepareParams={(params, route) => ({...params, fetchBuilding: params.select ? true : false})}/>
 		</Route>
 	</RelayRouter>,

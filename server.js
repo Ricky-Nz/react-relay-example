@@ -28,7 +28,7 @@ graphQLServer.listen(GRAPHQL_PORT, () =>
 	console.log(`GraphQL Server is now running on http://localhost:${GRAPHQL_PORT}`));
 
 var compiler = webpack({
-	devtool: 'cheap-module-eval-source-map',
+	devtool: 'source-map',
 	entry: path.resolve(__dirname, 'js', 'app.js'),
 	module: {
 		loaders: [
@@ -53,7 +53,7 @@ var app = new WebpackDevServer(compiler, {
 	stats: {colors: true}
 });
 
-app.use('/resources', express.static(path.resolve(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.resolve(__dirname, 'uploads')));
 app.use('/', express.static(path.resolve(__dirname, 'public')));
 app.listen(APP_PORT, () =>
 	console.log(`App is now running on http://localhost:${APP_PORT}`));

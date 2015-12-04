@@ -28,6 +28,7 @@ import {
 	findBuildingById,
 	findUserById,
 	findBuildingsByUser,
+	findPromoteBuildingsByUser,
 	findUserByName,
 	createUser,
 	createBuilding,
@@ -110,6 +111,9 @@ var GraphQLBuilding = new GraphQLObjectType({
 		index: {
 			type: GraphQLString
 		},
+		promote: {
+			type: GraphQLString
+		},
 		location: {
 			type: GraphQLString
 		},
@@ -159,6 +163,14 @@ var GraphQLUser = new GraphQLObjectType({
 			args: connectionArgs,
 			resolve: (user, args) => {
 				return findBuildingsByUser(user._id)
+					.then(buildings => connectionFromArray(buildings, args));
+			}
+		},
+		promotes: {
+			type: BuildingsConnection,
+			args: connectionArgs,
+			resolve: (user, args) => {
+				return findPromoteBuildingsByUser(user._id)
 					.then(buildings => connectionFromArray(buildings, args));
 			}
 		}
@@ -240,7 +252,10 @@ var createBuildingMutation = mutationWithClientMutationId({
 			type: new GraphQLNonNull(GraphQLString)
 		},
 		index: {
-			type: GraphQLString,
+			type: GraphQLString
+		},
+		promote: {
+			type: GraphQLString
 		},
 		location: {
 			type: GraphQLString
@@ -302,7 +317,10 @@ var updateBuildingMutation = mutationWithClientMutationId({
 			type: new GraphQLNonNull(GraphQLString)
 		},
 		index: {
-			type: GraphQLString,
+			type: GraphQLString
+		},
+		promote: {
+			type: GraphQLString
 		},
 		location: {
 			type: GraphQLString
