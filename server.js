@@ -9,7 +9,7 @@ import multer from 'multer';
 
 const APP_PORT = 3000;
 const GRAPHQL_PORT = 8080;
-mongoose.connect('mongodb://localhost/relay');
+mongoose.connect('mongodb://0.0.0.0/relay');
 
 var graphQLServer = express();
 var storage = multer.diskStorage({
@@ -48,7 +48,7 @@ var compiler = webpack({
 
 var app = new WebpackDevServer(compiler, {
 	contentBase: '/public/',
-	proxy: {'/graphql': `http://localhost:${GRAPHQL_PORT}`},
+	proxy: {'/graphql': `http://0.0.0.0:${GRAPHQL_PORT}`},
 	publicPath: '/js/',
 	stats: {colors: true}
 });

@@ -18,7 +18,7 @@ class GnNavbar extends React.Component {
 				</Navbar.Header>
 				<Navbar.Collapse>
 					<Navbar.Text pullRight>
-						Have a great day!
+						
 					</Navbar.Text>
 				</Navbar.Collapse>
 			</Navbar>

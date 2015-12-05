@@ -3,10 +3,11 @@ import { Carousel, CarouselItem } from 'react-bootstrap';
 
 class GnImageCarousel extends React.Component {
 	render() {
-		const { imageUrls, ...carouselProps } = this.props;
+		const { imageUrls, width, height, ...carouselProps } = this.props;
 		const carouselItems = imageUrls.map((imageUrl, index) => {
-			const test = {
-				height: 300,
+			const imageBackground = {
+				width: width,
+				height: height,
 	  			background: `url(${imageUrl}) no-repeat`,
 	  			backgroundSize: 'cover',
 	  			backgroundPosition: 'center'
@@ -14,11 +15,7 @@ class GnImageCarousel extends React.Component {
 
 			return (
 				<CarouselItem key={index}>
-					<div style={test}/>
-					<div className="carousel-caption">
-						<h3>First slide label</h3>
-						<p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-					</div>
+					<div style={imageBackground}/>
 				</CarouselItem>
 			);
 		});
@@ -31,6 +28,8 @@ class GnImageCarousel extends React.Component {
 }
 
 GnImageCarousel.propTypes = {
+	width: PropTypes.number,
+	height: PropTypes.number,
 	imageUrls: PropTypes.arrayOf(PropTypes.string).isRequired,
 	interval: PropTypes.number,
 	defaultActiveIndex: PropTypes.number,
@@ -39,7 +38,7 @@ GnImageCarousel.propTypes = {
 };
 
 GnImageCarousel.defaultProps = {
-	interval: 3000,
+	interval: 600000,
 	defaultActiveIndex: 0,
 	indicators: false,
 	controls: false

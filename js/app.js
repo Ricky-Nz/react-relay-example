@@ -9,6 +9,7 @@ import { createHashHistory } from 'history';
 
 import RootQueries from './queries/RootQueries';
 import MainPage from './components/MainPage';
+import ProjectPage from './components/ProjectPage';
 import BackendConsole from './components/BackendConsole';
 
 class Root extends React.Component {
@@ -26,6 +27,8 @@ ReactDOM.render(
 		<Route path='/' component={Root}>
 			<IndexRoute component={MainPage} queries={RootQueries}
 				queryParams={['username']}/>
+			<Route path='/project/:id' component={ProjectPage}
+				queries={RootQueries} queryParams={['username']}/>
 			<Route path='/console' component={BackendConsole}
 				queries={RootQueries} queryParams={['username', 'select']}
 				prepareParams={(params, route) => ({...params, fetchBuilding: params.select ? true : false})}/>

@@ -1,11 +1,11 @@
 import GnSelectableTags from './GnSelectableTags';
-import GnImageDropzone from './GnImageDropzone';
+import GnImageInput from './GnImageInput';
 import GnImageCarousel from './GnImageCarousel';
 import GnNavbar from './GnNavbar';
 
 export {
 	GnSelectableTags,
-	GnImageDropzone,
+	GnImageInput,
 	GnImageCarousel,
 	GnNavbar
 };

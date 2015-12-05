@@ -2,8 +2,8 @@ import React from 'react';
 import Relay from 'react-relay';
 import Dropzone from 'react-dropzone';
 import BuildingSegment from './BuildingSegment';
-import { Input, Button, Row, Col, Image } from 'react-bootstrap';
-import { GnSelectableTags, GnImageDropzone } from './elements';
+import { Input, Button, Row, Col, Image, Panel } from 'react-bootstrap';
+import { GnSelectableTags, GnImageInput } from './elements';
 import { CreateBuildingMutation, UpdateBuildingMutation, RemoveBuildingMutation } from '../mutations';
 import _ from 'underscore';
 
@@ -16,44 +16,62 @@ class BuildingEditor extends React.Component {
 		this.setState(this.onPropChanged(nextProps));
 	}
 	render() {
-		const bottombar = {
+		const flexEnd = {
 			display: 'flex',
 			flexDirection: 'row',
-			alignItems: 'flex-end',
-			justifyContent: 'space-between'
+			alignItems: 'flex-end'
 		};
-		const textFields = [ 'Name', 'Index', 'Promote', 'Location', 'Type', 'Area', 'Status' ];
-		const fileFields = [ 'Banner', 'Thumbnail' ];
-		const textFieldViews = textFields.map((name, index) => {
-			const lowerCaseName = name.toLowerCase();
-			return (
-				<Input key={index} type='text' placeholder={`building ${lowerCaseName}`}
-					label={name} value={this.state[lowerCaseName]}
-					onChange={this.onInputChanged.bind(this, lowerCaseName)}/>
-			);
-		});
-		const fileFieldViews = fileFields.map((name, index) => {
-			const lowerCaseName = name.toLowerCase();
-			return (
-				<GnImageDropzone key={index} ref={lowerCaseName}
-					image={this.state[lowerCaseName]}/>
-			);
-		});
 		const contentSegmentsViews = this.state.segments.map((segment, index) =>
-			<BuildingSegment ref={`segment-${index}`} key={index} segment={segment}/>);
+			<BuildingSegment ref={`segment-${index}`} key={index} index={index}
+				segment={segment} onInsert={this.onSegmentChange.bind(this, index, false)}
+				onDelete={this.onSegmentChange.bind(this, index, true)}/>);
 
 		return (
 			<div>
-				{textFieldViews}
-				{fileFieldViews}
-				{contentSegmentsViews}
-				<Button onClick={this.onNewSegment.bind(this)}>New Segment</Button>
-				<GnSelectableTags ref='tags' labels={this.state.labels||[]}/>
-				<div style={bottombar}>
-					<div>
-						{this.props.building&&<Button bsStyle='danger' onClick={this.onDelete.bind(this)}>Delete</Button>}
-						<Button bsStyle='primary' onClick={this.onSubmit.bind(this)}>Submit</Button>
+				<Panel header='Basic'>
+					<Input type='text' placeholder='name' label='Name' value={this.state.name}
+						onChange={this.onInputChanged.bind(this, 'name')}/>
+					<Row>
+						<Col xs={6}>
+							<Input type='text' placeholder='index' label='Index' value={this.state.index}
+								onChange={this.onInputChanged.bind(this, 'index')}/>
+						</Col>
+						<Col xs={6}>
+							<Input type='text' placeholder='promote order' label='Promote' value={this.state.promote}
+								onChange={this.onInputChanged.bind(this, 'promote')}/>
+						</Col>
+					</Row>
+					<Input type='textarea' placeholder='location' label='Location' value={this.state.location}
+						onChange={this.onInputChanged.bind(this, 'location')}/>
+					<Row>
+						<Col xs={4}>
+							<Input type='text' placeholder='type' label='Type' value={this.state.type}
+								onChange={this.onInputChanged.bind(this, 'type')}/>
+						</Col>
+						<Col xs={4}>
+							<Input type='text' placeholder='area' label='Area' value={this.state.area}
+								onChange={this.onInputChanged.bind(this, 'area')}/>
+						</Col>
+						<Col xs={4}>
+							<Input type='text' placeholder='status' label='Status' value={this.state.status}
+								onChange={this.onInputChanged.bind(this, 'status')}/>
+						</Col>
+					</Row>
+					<GnSelectableTags ref='tags' labels={this.state.labels||[]}/>
+					<GnImageInput ref='banner' label='Banner' imageUrl={this.state.banner}/>
+					<GnImageInput ref='thumbnail' label='Thumbnail' imageUrl={this.state.thumbnail}/>
+				</Panel>
+				<Panel header='Details'>
+					{contentSegmentsViews}
+					<div style={flexEnd}>
+						<Button bsSize='small' onClick={this.onSegmentChange.bind(this, -1, false)}>Add</Button>
 					</div>
+				</Panel>
+				<div style={flexEnd}>
+					<p>
+						{this.props.building&&<Button bsSize='small' bsStyle='danger' onClick={this.onDelete.bind(this)}>Delete</Button>}
+						<Button bsSize='small' bsStyle='primary' onClick={this.onSubmit.bind(this)}>Submit</Button>
+					</p>
 				</div>
 			</div>
 		);
@@ -77,8 +95,16 @@ class BuildingEditor extends React.Component {
 	onInputChanged(fieldName, e) {
 		this.setState({ [fieldName]: e.target.value });
 	}
-	onNewSegment() {
-		this.setState({ segments: [...this.state.segments, {}]});
+	onSegmentChange(index, del) {
+		var newSegments;
+		if (del) {
+			newSegments = [...this.state.segments.slice(0, index), ...this.state.segments.slice(index + 1)];
+		} else if (index >= 0) {
+			newSegments = [...this.state.segments.slice(0, index), {}, ...this.state.segments.slice(index)];
+		} else {
+			newSegments = [...this.state.segments, {}];
+		}
+		this.setState({ segments: newSegments})
 	}
 	onSubmit() {
 		var fields = {
@@ -93,25 +119,25 @@ class BuildingEditor extends React.Component {
 			segments: [],
 			fileMap: {}
 		};
-		const bannerFile = this.refs.banner.getImages();
-		if (bannerFile&&bannerFile.preview) {
-			fields.fileMap.banner = bannerFile;
+		const banner = this.refs.banner.getImages();
+		if (typeof banner === 'object') {
+			fields.fileMap.banner = banner;
 		}
-		const thumbnailFile = this.refs.thumbnail.getImages();
-		if (thumbnailFile&&thumbnailFile.preview) {
-			fields.fileMap.thumbnail = thumbnailFile;
+		const thumbnail = this.refs.thumbnail.getImages();
+		if (typeof thumbnail === 'object') {
+			fields.fileMap.thumbnail = thumbnail;
 		}
-		this.state.segments.forEach((segment, index) => {
-			let segmentData = this.refs[`segment-${index}`].getSegment();
-			if (segmentData.images && segmentData.images[0].preview) {
-				let files = segmentData.images;
-				delete segmentData.images;
-				if (files) {
-					files.map((file, fileIndex) =>
-						fields.fileMap[`segment-${index}-${fileIndex}`] = file);
-				}
+		this.state.segments.forEach((data, index) => {
+			let segment = this.refs[`segment-${index}`].getSegment();
+			if (segment.images) {
+				segment.images.forEach((image, imageIndex) => {
+					if (typeof image === 'object') {
+						fields.fileMap[`segment-${index}-${imageIndex}`] = image;
+						segment.images[imageIndex] = '';
+					}
+				});
 			}
-			fields.segments.push(segmentData);
+			fields.segments.push(segment);
 		});
 
 		if (this.props.building) {

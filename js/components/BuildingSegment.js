@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
-import { Input } from 'react-bootstrap';
-import { GnImageDropzone } from './elements';
+import { Input, Row, Col, Label, Button, ButtonGroup } from 'react-bootstrap';
+import { GnImageInput } from './elements';
 
 class BuildingSegment extends React.Component {
 	constructor(props) {
@@ -13,23 +13,49 @@ class BuildingSegment extends React.Component {
 		}
 	}
 	render() {
+		const spaceBetween = {
+			display: 'flex',
+			flexDirection: 'row',
+			justifyContent: 'space-between'
+		};
+
 		return (
 			<div>
-				<Input type='text' placeholder='title' label='Title'
-					value={this.state.title} onChange={this.onInputChange.bind(this, 'title')}/>
+				<div style={spaceBetween}>
+					<p>
+						<Label>{this.props.index + 1}</Label>
+					</p>
+					<ButtonGroup>
+						<Button bsSize='small' onClick={() => this.props.onInsert(this.props.index)}>Insert</Button>
+						<Button bsSize='small' bsStyle='danger' onClick={() => this.props.onDelete(this.props.index)}>Delete</Button>
+					</ButtonGroup>
+				</div>
+				<Row>
+					<Col xs={10}>
+						<Input type='text' placeholder='title' label='Title'
+							value={this.state.title} onChange={this.onInputChange.bind(this, 'title')}/>
+					</Col>
+					<Col xs={2}>
+						<Input type='select' label='Mode' value={this.state.mode}
+							placeholder='select display mode' onChange={this.onInputChange.bind(this, 'mode')}>
+							<option value='LEFT'>LEFT</option>
+							<option value='RIGHT'>RIGHT</option>
+							<option value='MIDDLE'>MIDDLE</option>
+							<option value='FILL'>FILL</option>
+						</Input>
+					</Col>
+				</Row>
 				<Input type='textarea' placeholder='content' label='Content'
 					value={this.state.content} onChange={this.onInputChange.bind(this, 'content')}/>
-				<Input type='text' placeholder='mode' label='Mode'
-					value={this.state.mode} onChange={this.onInputChange.bind(this, 'mode')}/>
-				<GnImageDropzone ref='files' image={this.props.segment.images} multiple/>
+				<GnImageInput ref='images' label='Images' multiple={true} imageUrl={this.props.segment.images}/>
 			</div>
 		);
 	}
 	onPropsChange(props) {
 		return {
-			title: props.segment.title,
-			content: props.segment.content,
-			mode: props.segment.mode
+			title: props.segment.title||'',
+			content: props.segment.content||'',
+			mode: props.segment.mode||'LEFT'
 		};
 	}
 	onInputChange(fileName, e) {
@@ -37,12 +63,15 @@ class BuildingSegment extends React.Component {
 	}
 	getSegment() {
 		return Object.assign({},
-			this.state, {images: this.refs.files.getImages()});
+			this.state, {images: this.refs.images.getImages()});
 	}
 }
 
 BuildingSegment.propTypes = {
-	segment: PropTypes.object.isRequired
+	index: PropTypes.number,
+	segment: PropTypes.object.isRequired,
+	onDelete: PropTypes.func,
+	onInsert: PropTypes.func
 };
 
 export default BuildingSegment;

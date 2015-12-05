@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import Relay from 'react-relay';
 import BuildingGridItem from './BuildingGridItem';
 
@@ -7,10 +7,11 @@ class BuildingGrid extends React.Component {
 		const contentStyle = {
 			display: 'flex',
 			flexDirection: 'row',
+			justifyContent: 'center',
 			flexWrap: 'wrap'
 		};
 		const gridItems = this.props.user.buildings.edges.map(({node}, index) => (
-			<BuildingGridItem key={index} building={node}/>
+			<BuildingGridItem key={index} building={node} onItemClick={this.props.onItemClick}/>
 		));
 
 		return (
@@ -20,6 +21,10 @@ class BuildingGrid extends React.Component {
 		);
 	}
 }
+
+BuildingGrid.propTypes = {
+	onItemClick: PropTypes.func
+};
 
 export default Relay.createContainer(BuildingGrid, {
 	fragments: {
