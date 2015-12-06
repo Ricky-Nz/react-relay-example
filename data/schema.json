@@ -382,6 +382,18 @@
               "deprecationReason": null
             },
             {
+              "name": "label",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "promote",
               "description": null,
               "args": [],
@@ -475,22 +487,6 @@
                 "ofType": {
                   "kind": "OBJECT",
                   "name": "Segment",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "labels",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
                   "ofType": null
                 }
               },
@@ -1136,6 +1132,16 @@
               "defaultValue": null
             },
             {
+              "name": "label",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
               "name": "promote",
               "description": null,
               "type": {
@@ -1194,20 +1200,6 @@
                 "ofType": {
                   "kind": "INPUT_OBJECT",
                   "name": "SegmentInput",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "labels",
-              "description": null,
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
                   "ofType": null
                 }
               },
@@ -1383,6 +1375,16 @@
               "defaultValue": null
             },
             {
+              "name": "label",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
               "name": "index",
               "description": null,
               "type": {
@@ -1451,20 +1453,6 @@
                 "ofType": {
                   "kind": "INPUT_OBJECT",
                   "name": "SegmentInput",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "labels",
-              "description": null,
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
                   "ofType": null
                 }
               },

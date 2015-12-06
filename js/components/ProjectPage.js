@@ -53,7 +53,6 @@ export default Relay.createContainer(ProjectPage, {
 					banner,
 					thumbnail,
 					${ProjectNamecard.getFragment('building')},
-					labels,
 					segments {
 						${ProjectSegment.getFragment('segment')}
 					}

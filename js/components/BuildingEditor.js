@@ -25,16 +25,30 @@ class BuildingEditor extends React.Component {
 			<BuildingSegment ref={`segment-${index}`} key={index} index={index}
 				segment={segment} onInsert={this.onSegmentChange.bind(this, index, false)}
 				onDelete={this.onSegmentChange.bind(this, index, true)}/>);
+		const categoryViews = this.props.user.categories.map((category, index) =>
+			<option key={index} value={category}>{category}</option>);
+		const labelViews = this.props.user.labels.map((label, index) =>
+			<option key={index} value={label}>{label}</option>);
 
 		return (
 			<div>
 				<Panel header='Basic'>
-					<Input type='text' placeholder='name' label='Name' value={this.state.name}
-						onChange={this.onInputChanged.bind(this, 'name')}/>
 					<Row>
+						<Col xs={12}>
+							<Input type='text' placeholder='name' label='Name' value={this.state.name}
+								onChange={this.onInputChanged.bind(this, 'name')}/>
+						</Col>
 						<Col xs={4}>
-							<Input type='text' placeholder='category' label='Category' value={this.state.category}
-								onChange={this.onInputChanged.bind(this, 'category')}/>
+							<Input type='select' label='Category' value={this.state.category}
+								placeholder='select category' onChange={this.onInputChanged.bind(this, 'category')}>
+								{categoryViews}
+							</Input>
+						</Col>
+						<Col xs={4}>
+							<Input type='select' label='Label' value={this.state.label}
+								placeholder='select label' onChange={this.onInputChanged.bind(this, 'label')}>
+								{labelViews}
+							</Input>
 						</Col>
 						<Col xs={4}>
 							<Input type='text' placeholder='promote order' label='Promote' value={this.state.promote}
@@ -44,10 +58,10 @@ class BuildingEditor extends React.Component {
 							<Input type='text' placeholder='promote order' label='Promote' value={this.state.promote}
 								onChange={this.onInputChanged.bind(this, 'promote')}/>
 						</Col>
-					</Row>
-					<Input type='textarea' placeholder='location' label='Location' value={this.state.location}
-						onChange={this.onInputChanged.bind(this, 'location')}/>
-					<Row>
+						<Col xs={12}>
+							<Input type='textarea' placeholder='location' label='Location' value={this.state.location}
+								onChange={this.onInputChanged.bind(this, 'location')}/>
+						</Col>
 						<Col xs={4}>
 							<Input type='text' placeholder='type' label='Type' value={this.state.type}
 								onChange={this.onInputChanged.bind(this, 'type')}/>
@@ -61,8 +75,6 @@ class BuildingEditor extends React.Component {
 								onChange={this.onInputChanged.bind(this, 'status')}/>
 						</Col>
 					</Row>
-					<GnTags ref='tags' tags={this.props.building&&this.props.building.labels}
-						label='Labels' placeholder='new label'/>
 					<GnImageInput ref='banner' label='Banner' imageUrl={this.props.building&&this.props.building.banner}/>
 					<GnImageInput ref='thumbnail' label='Thumbnail' imageUrl={this.props.building&&this.props.building.thumbnail}/>
 				</Panel>
@@ -87,6 +99,7 @@ class BuildingEditor extends React.Component {
 			name: building&&building.name||'',
 			index: building&&building.index||'',
 			category: building&&building.category||'',
+			label: building&&building.label||'',
 			promote: building&&building.promote||'',
 			location: building&&building.location||'',
 			type: building&&building.type||'',
@@ -114,12 +127,12 @@ class BuildingEditor extends React.Component {
 			name: this.state.name,
 			index: this.state.index,
 			category: this.state.category,
+			label: this.state.label,
 			promote: this.state.promote,
 			location: this.state.location,
 			type: this.state.type,
 			area: this.state.area,
 			status: this.state.status,
-			labels: this.refs.tags.getTags(),
 			segments: [],
 			fileMap: {}
 		};
@@ -169,6 +182,8 @@ export default Relay.createContainer(BuildingEditor, {
 	fragments: {
 		user: () => Relay.QL`
 			fragment on User {
+				categories,
+				labels,
 				${CreateBuildingMutation.getFragment('user')},
 				${RemoveBuildingMutation.getFragment('user')},
 			}
@@ -179,6 +194,7 @@ export default Relay.createContainer(BuildingEditor, {
 				name,
 				index,
 				category,
+				label,
 				promote,
 				location,
 				type,
@@ -186,7 +202,6 @@ export default Relay.createContainer(BuildingEditor, {
 				status,
 				banner,
 				thumbnail,
-				labels,
 				segments {
 					title,
 					content,

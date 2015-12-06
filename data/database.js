@@ -12,6 +12,7 @@ export var DBBuilding = mongoose.model('DBBuilding', new Schema({
 	name: { type: String, required: true },
 	index: { type: String },
 	category: { type: String },
+	label: { type: String },
 	promote: { type: Number },
 	location: { type: String },
 	type: { type: String },
@@ -19,8 +20,7 @@ export var DBBuilding = mongoose.model('DBBuilding', new Schema({
 	status: { type: String },
 	banner: { type: String },
 	thumbnail: { type: String },
-	segments: [SegmentSchema],
-	labels: [String]
+	segments: [SegmentSchema]
 }));
 
 export var DBUser = mongoose.model('DBUser', new Schema({

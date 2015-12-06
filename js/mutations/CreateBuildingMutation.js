@@ -39,13 +39,13 @@ export default class CreateBuildingMutation extends Relay.Mutation {
 			name: this.props.name,
 			index: this.props.index,
 			category: this.props.category,
+			label: this.props.label,
 			promote: this.props.promote,
 			location: this.props.location,
 			type: this.props.type,
 			area: this.props.area,
 			status: this.props.status,
-			segments: this.props.segments,
-			labels: this.props.labels
+			segments: this.props.segments
 		};
 	}
 	getFiles() {

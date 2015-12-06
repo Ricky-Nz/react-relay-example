@@ -115,6 +115,9 @@ var GraphQLBuilding = new GraphQLObjectType({
 		category: {
 			type: GraphQLString
 		},
+		label: {
+			type: GraphQLString
+		},
 		promote: {
 			type: GraphQLString
 		},
@@ -138,9 +141,6 @@ var GraphQLBuilding = new GraphQLObjectType({
 		},
 		segments: {
 			type: new GraphQLList(GraphQLSegment)
-		},
-		labels: {
-			type: new GraphQLList(GraphQLString)
 		}
 	}),
 	interfaces: [nodeInterface]
@@ -286,6 +286,9 @@ var createBuildingMutation = mutationWithClientMutationId({
 		category: {
 			type: GraphQLString
 		},
+		label: {
+			type: GraphQLString
+		},
 		promote: {
 			type: GraphQLString
 		},
@@ -303,9 +306,6 @@ var createBuildingMutation = mutationWithClientMutationId({
 		},
 		segments: {
 			type: new GraphQLList(GraphQLSegmentInput)
-		},
-		labels: {
-			type: new GraphQLList(GraphQLString)
 		}
 	},
 	outputFields: {
@@ -351,6 +351,9 @@ var updateBuildingMutation = mutationWithClientMutationId({
 		category: {
 			type: GraphQLString
 		},
+		label: {
+			type: GraphQLString
+		},
 		index: {
 			type: GraphQLString
 		},
@@ -371,9 +374,6 @@ var updateBuildingMutation = mutationWithClientMutationId({
 		},
 		segments: {
 			type: new GraphQLList(GraphQLSegmentInput)
-		},
-		labels: {
-			type: new GraphQLList(GraphQLString)
 		}
 	},
 	outputFields: {
