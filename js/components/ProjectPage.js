@@ -36,6 +36,7 @@ class ProjectPage extends React.Component {
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<PageItem href="#">Next</PageItem>
 				</Pager>
+				<br/><br/><br/><br/><br/><br/>
 			</div>
 		);
 	}

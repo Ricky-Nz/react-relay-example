@@ -21,7 +21,7 @@ class ConfigureConsole extends React.Component {
 	}
 	onUpdateUser() {
 		Relay.Store.update(new UpdateUserMutation({
-			user: this.props.user,
+			user: this.props.app.user,
 			categories: this.refs.category.getTags(),
 			labels: this.refs.label.getTags()
 		}));
@@ -33,6 +33,8 @@ export default Relay.createContainer(ConfigureConsole, {
 		app: () => Relay.QL`
 			fragment on App {
 				user {
+					categories,
+					labels,
 					${UpdateUserMutation.getFragment('user')}
 				}
 			}

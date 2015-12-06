@@ -10,12 +10,13 @@ export default class UpdateUserMutation extends Relay.Mutation {
 		` 
 	};
 	getMutation() {
-		return Relay.QL`mutation(updateUser)`;
+		return Relay.QL`mutation{updateUser}`;
 	}
 	getFatQuery() {
 		return Relay.QL`
 			fragment on UpdateUserPayload {
 				user {
+					id,
 					categories,
 					labels
 				}

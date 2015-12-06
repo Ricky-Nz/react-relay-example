@@ -250,6 +250,9 @@ var updateUserMutation = mutationWithClientMutationId({
 	name: 'UpdateUser',
 	description: 'update user configuration',
 	inputFields: {
+		name: {
+			type: new GraphQLNonNull(GraphQLString)
+		},
 		categories: {
 			type: new GraphQLList(GraphQLString)
 		},
@@ -264,8 +267,8 @@ var updateUserMutation = mutationWithClientMutationId({
 				findUserById(userId).then(user => user)
 		}
 	},
-	mutateAndGetPayload: ({name}) =>
-		updateUser(name).then(user => ({userId: user._id}))
+	mutateAndGetPayload: (args) =>
+		updateUser(args).then(user => ({userId: user._id}))
 })
 
 var createBuildingMutation = mutationWithClientMutationId({

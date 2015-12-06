@@ -55,7 +55,7 @@ export function createUser(name) {
 	return user.save();
 }
 
-export function updateUser(name, ...updateFields) {
+export function updateUser({name, ...updateFields}) {
 	return DBUser.findOneAndUpdate({name: name}, updateFields, {'new': true}).exec();
 }
 

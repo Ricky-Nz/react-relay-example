@@ -13,7 +13,7 @@ class BuildingList extends React.Component {
 		};
 		const buildingItems = this.props.user.buildings.edges.map(({node}, index) => {
 			return (
-				<ListGroupItem key={index} href={`#/console?username=${this.props.user.name}&select=${node.id}`}>
+				<ListGroupItem key={index} href={`#/console/project?username=${this.props.user.name}&select=${node.id}`}>
 					{node.name}
 				</ListGroupItem>
 			);
@@ -22,7 +22,7 @@ class BuildingList extends React.Component {
 		return (
 			<div>
 				<ListGroup>
-					<ListGroupItem href={`#/console?username=${this.props.user.name}`}>
+					<ListGroupItem href={`#/console/project?username=${this.props.user.name}`}>
 						<div style={centerItem}><Glyphicon glyph='plus'/>New</div>
 					</ListGroupItem>
 					{buildingItems}
