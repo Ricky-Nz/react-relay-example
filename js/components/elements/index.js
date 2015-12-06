@@ -1,10 +1,10 @@
-import GnSelectableTags from './GnSelectableTags';
+import GnTags from './GnTags';
 import GnImageInput from './GnImageInput';
 import GnImageCarousel from './GnImageCarousel';
 import GnNavbar from './GnNavbar';
 
 export {
-	GnSelectableTags,
+	GnTags,
 	GnImageInput,
 	GnImageCarousel,
 	GnNavbar

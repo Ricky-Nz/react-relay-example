@@ -11,6 +11,7 @@ export var DBBuilding = mongoose.model('DBBuilding', new Schema({
 	userId: { type: Schema.Types.ObjectId, required: true },
 	name: { type: String, required: true },
 	index: { type: String },
+	category: { type: String },
 	promote: { type: Number },
 	location: { type: String },
 	type: { type: String },
@@ -23,7 +24,9 @@ export var DBBuilding = mongoose.model('DBBuilding', new Schema({
 }));
 
 export var DBUser = mongoose.model('DBUser', new Schema({
-	name: { type: String, unique: true, required: true }
+	name: { type: String, unique: true, required: true },
+	categories: [String],
+	labels: [String]
 }));
 
 export function findBuildingsByUser(userId) {
@@ -50,6 +53,10 @@ export function createUser(name) {
 	var user = new DBUser();
 	user.name = name;
 	return user.save();
+}
+
+export function updateUser(name, ...updateFields) {
+	return DBUser.findOneAndUpdate({name: name}, updateFields, {'new': true}).exec();
 }
 
 function assignFiles(fields, files) {

@@ -3,7 +3,7 @@ import Relay from 'react-relay';
 import Dropzone from 'react-dropzone';
 import BuildingSegment from './BuildingSegment';
 import { Input, Button, Row, Col, Image, Panel } from 'react-bootstrap';
-import { GnSelectableTags, GnImageInput } from './elements';
+import { GnTags, GnImageInput } from './elements';
 import { CreateBuildingMutation, UpdateBuildingMutation, RemoveBuildingMutation } from '../mutations';
 import _ from 'underscore';
 
@@ -32,11 +32,15 @@ class BuildingEditor extends React.Component {
 					<Input type='text' placeholder='name' label='Name' value={this.state.name}
 						onChange={this.onInputChanged.bind(this, 'name')}/>
 					<Row>
-						<Col xs={6}>
-							<Input type='text' placeholder='index' label='Index' value={this.state.index}
-								onChange={this.onInputChanged.bind(this, 'index')}/>
+						<Col xs={4}>
+							<Input type='text' placeholder='category' label='Category' value={this.state.category}
+								onChange={this.onInputChanged.bind(this, 'category')}/>
 						</Col>
-						<Col xs={6}>
+						<Col xs={4}>
+							<Input type='text' placeholder='promote order' label='Promote' value={this.state.promote}
+								onChange={this.onInputChanged.bind(this, 'promote')}/>
+						</Col>
+						<Col xs={4}>
 							<Input type='text' placeholder='promote order' label='Promote' value={this.state.promote}
 								onChange={this.onInputChanged.bind(this, 'promote')}/>
 						</Col>
@@ -57,9 +61,10 @@ class BuildingEditor extends React.Component {
 								onChange={this.onInputChanged.bind(this, 'status')}/>
 						</Col>
 					</Row>
-					<GnSelectableTags ref='tags' labels={this.state.labels||[]}/>
-					<GnImageInput ref='banner' label='Banner' imageUrl={this.state.banner}/>
-					<GnImageInput ref='thumbnail' label='Thumbnail' imageUrl={this.state.thumbnail}/>
+					<GnTags ref='tags' tags={this.props.building&&this.props.building.labels}
+						label='Labels' placeholder='new label'/>
+					<GnImageInput ref='banner' label='Banner' imageUrl={this.props.building&&this.props.building.banner}/>
+					<GnImageInput ref='thumbnail' label='Thumbnail' imageUrl={this.props.building&&this.props.building.thumbnail}/>
 				</Panel>
 				<Panel header='Details'>
 					{contentSegmentsViews}
@@ -81,14 +86,12 @@ class BuildingEditor extends React.Component {
 		return {
 			name: building&&building.name||'',
 			index: building&&building.index||'',
+			category: building&&building.category||'',
 			promote: building&&building.promote||'',
 			location: building&&building.location||'',
 			type: building&&building.type||'',
 			area: building&&building.area||'',
 			status: building&&building.status||'',
-			banner: building&&building.banner||null,
-			thumbnail: building&&building.thumbnail||null,
-			labels: building&&building.labels||[],
 			segments: building&&building.segments||[]
 		};
 	}
@@ -110,12 +113,13 @@ class BuildingEditor extends React.Component {
 		var fields = {
 			name: this.state.name,
 			index: this.state.index,
+			category: this.state.category,
 			promote: this.state.promote,
 			location: this.state.location,
 			type: this.state.type,
 			area: this.state.area,
 			status: this.state.status,
-			labels: this.state.labels,
+			labels: this.refs.tags.getTags(),
 			segments: [],
 			fileMap: {}
 		};
@@ -174,6 +178,7 @@ export default Relay.createContainer(BuildingEditor, {
 				id,
 				name,
 				index,
+				category,
 				promote,
 				location,
 				type,

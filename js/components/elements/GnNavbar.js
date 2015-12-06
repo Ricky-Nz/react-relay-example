@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { Navbar } from 'react-bootstrap';
+import { Navbar, Nav, NavItem } from 'react-bootstrap';
 
 class GnNavbar extends React.Component {
 	render() {
@@ -7,6 +7,8 @@ class GnNavbar extends React.Component {
 		const navStyle = {
 			background: 'white'
 		};
+		const navItems = this.props.items&&this.props.items.map((item, index) =>
+			<NavItem key={index} eventKey={index} href={item.link}>{item.label}</NavItem>);
 		
 		return (
 			<Navbar {...navProps} style={navStyle}>
@@ -14,12 +16,11 @@ class GnNavbar extends React.Component {
 					<Navbar.Brand>
 						<a href="#">{title}</a>
 					</Navbar.Brand>
-					<Navbar.Toggle />
 				</Navbar.Header>
 				<Navbar.Collapse>
-					<Navbar.Text pullRight>
-						
-					</Navbar.Text>
+					<Nav>
+						{navItems}
+					</Nav>
 				</Navbar.Collapse>
 			</Navbar>
 		);
@@ -27,6 +28,10 @@ class GnNavbar extends React.Component {
 }
 
 GnNavbar.propTypes = {
+	items: PropTypes.arrayOf(PropTypes.shape({
+		label: PropTypes.string,
+		link: PropTypes.string
+	})),
 	title: PropTypes.string.isRequired
 };
 

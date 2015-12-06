@@ -31,6 +31,7 @@ import {
 	findPromoteBuildingsByUser,
 	findUserByName,
 	createUser,
+	updateUser,
 	createBuilding,
 	updateBuilding,
 	removeBuilding
@@ -111,6 +112,9 @@ var GraphQLBuilding = new GraphQLObjectType({
 		index: {
 			type: GraphQLString
 		},
+		category: {
+			type: GraphQLString
+		},
 		promote: {
 			type: GraphQLString
 		},
@@ -158,6 +162,12 @@ var GraphQLUser = new GraphQLObjectType({
 		name: {
 			type: GraphQLString
 		},
+		categories: {
+			type: new GraphQLList(GraphQLString)
+		},
+		labels: {
+			type: new GraphQLList(GraphQLString)
+		},
 		buildings: {
 			type: BuildingsConnection,
 			args: connectionArgs,
@@ -186,11 +196,11 @@ var GraphQLApp = new GraphQLObjectType({
 			type: GraphQLUser,
 			args: {
 				name: {
-					type: new GraphQLNonNull(GraphQLString)
+					type: GraphQLString
 				}
 			},
 			resolve: (app, {name}) =>
-				findUserByName(name).then(user => user)
+				findUserByName(name||'ruiqi').then(user => user)
 		},
 		building: {
 			type: GraphQLBuilding,
@@ -228,18 +238,34 @@ var createUserMutation = mutationWithClientMutationId({
 	outputFields: {
 		user: {
 			type: GraphQLUser,
-			resolve: ({userId}) => {
-				return findUserById(userId)
-					.then(user => user);
-			}
+			resolve: ({userId}) =>
+				findUserById(userId).then(user => user)
 		}
 	},
-	mutateAndGetPayload: ({name}) => {
-		return createUser(name)
-			.then(user => ({
-				userId: user._id
-			}));
-	}
+	mutateAndGetPayload: ({name}) =>
+		createUser(name).then(user => ({userId: user._id}))
+});
+
+var updateUserMutation = mutationWithClientMutationId({
+	name: 'UpdateUser',
+	description: 'update user configuration',
+	inputFields: {
+		categories: {
+			type: new GraphQLList(GraphQLString)
+		},
+		labels: {
+			type: new GraphQLList(GraphQLString)
+		}
+	},
+	outputFields: {
+		user: {
+			type: GraphQLUser,
+			resolve: ({userId}) =>
+				findUserById(userId).then(user => user)
+		}
+	},
+	mutateAndGetPayload: ({name}) =>
+		updateUser(name).then(user => ({userId: user._id}))
 })
 
 var createBuildingMutation = mutationWithClientMutationId({
@@ -252,6 +278,9 @@ var createBuildingMutation = mutationWithClientMutationId({
 			type: new GraphQLNonNull(GraphQLString)
 		},
 		index: {
+			type: GraphQLString
+		},
+		category: {
 			type: GraphQLString
 		},
 		promote: {
@@ -315,6 +344,9 @@ var updateBuildingMutation = mutationWithClientMutationId({
 		},
 		name: {
 			type: new GraphQLNonNull(GraphQLString)
+		},
+		category: {
+			type: GraphQLString
 		},
 		index: {
 			type: GraphQLString
@@ -387,6 +419,7 @@ var mutationType = new GraphQLObjectType({
 	name: 'Mutation',
 	fields: () => ({
 		createUser: createUserMutation,
+		updateUser: updateUserMutation,
 		createBuilding: createBuildingMutation,
 		updateBuilding: updateBuildingMutation,
 		removeBuilding: removeBuildingMutation

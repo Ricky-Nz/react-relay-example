@@ -14,7 +14,7 @@ class ProjectSegment extends React.Component {
 				return (
 					<Row style={contentStyle}>
 						<Col xs={10} xsOffset={1} sm={5} smOffset={1} md={4} mdOffset={2}>
-							<GnImageCarousel imageUrls={images} height={250} controls/>
+							<GnImageCarousel imageUrls={images} height={250}/>
 						</Col>
 						<Col xs={10} xsOffset={1} sm={5} smOffset={0} md={4} mdOffset={0}>
 							<h4>{title}</h4>
@@ -30,7 +30,7 @@ class ProjectSegment extends React.Component {
 							<p>{content}</p>
 						</Col>
 						<Col xs={10} xsOffset={1} sm={5} smOffset={0} md={4} mdOffset={0}>
-							<GnImageCarousel imageUrls={images} height={250} controls/>
+							<GnImageCarousel imageUrls={images} height={250}/>
 						</Col>
 					</Row>
 				);
@@ -42,7 +42,7 @@ class ProjectSegment extends React.Component {
 							<p>{content}</p>
 						</Col>
 						<Col xs={10} xsOffset={1} md={6} mdOffset={3}>
-							<GnImageCarousel imageUrls={images} height={300} controls/>
+							<GnImageCarousel imageUrls={images} height={300}/>
 						</Col>
 					</Row>
 				);
@@ -50,7 +50,7 @@ class ProjectSegment extends React.Component {
 				return (
 					<Row style={contentStyle}>
 						<Col xs={12}>
-							<GnImageCarousel imageUrls={images} height={400} controls/>
+							<GnImageCarousel imageUrls={images} height={400}/>
 						</Col>
 					</Row>
 				);

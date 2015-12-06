@@ -20,7 +20,7 @@ class GnImageCarousel extends React.Component {
 			);
 		});
 		return (
-			<Carousel {...carouselProps}>
+			<Carousel {...carouselProps} controls={imageUrls&&imageUrls.length>1}>
 				{carouselItems}
 			</Carousel>
 		);
@@ -33,15 +33,13 @@ GnImageCarousel.propTypes = {
 	imageUrls: PropTypes.arrayOf(PropTypes.string).isRequired,
 	interval: PropTypes.number,
 	defaultActiveIndex: PropTypes.number,
-	indicators: PropTypes.bool,
-	controls: PropTypes.bool
+	indicators: PropTypes.bool
 };
 
 GnImageCarousel.defaultProps = {
 	interval: 600000,
 	defaultActiveIndex: 0,
-	indicators: false,
-	controls: false
+	indicators: false
 };
 
 export default GnImageCarousel;
