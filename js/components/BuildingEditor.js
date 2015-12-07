@@ -29,6 +29,10 @@ class BuildingEditor extends React.Component {
 			<option key={index} value={category}>{category}</option>);
 		const labelViews = this.props.user.labels.map((label, index) =>
 			<option key={index} value={label}>{label}</option>);
+		const projectTypeViews = this.props.user.projectTypes.map((type, index) =>
+			<option key={index} value={type}>{type}</option>);
+		const promoteSelectionViews = this.props.user.bannerCount>0&&_.range(this.props.user.bannerCount).map(index =>
+			<option key={index} value={index+1}>{index+1}</option>);
 
 		return (
 			<div>
@@ -38,45 +42,53 @@ class BuildingEditor extends React.Component {
 							<Input type='text' placeholder='name' label='Name' value={this.state.name}
 								onChange={this.onInputChanged.bind(this, 'name')}/>
 						</Col>
-						<Col xs={4}>
+						<Col xs={6} md={4}>
 							<Input type='select' label='Category' value={this.state.category}
 								placeholder='select category' onChange={this.onInputChanged.bind(this, 'category')}>
 								{categoryViews}
 							</Input>
 						</Col>
-						<Col xs={4}>
+						<Col xs={6} md={4}>
 							<Input type='select' label='Label' value={this.state.label}
 								placeholder='select label' onChange={this.onInputChanged.bind(this, 'label')}>
 								{labelViews}
 							</Input>
 						</Col>
-						<Col xs={4}>
-							<Input type='text' placeholder='promote order' label='Promote' value={this.state.promote}
-								onChange={this.onInputChanged.bind(this, 'promote')}/>
-						</Col>
-						<Col xs={4}>
-							<Input type='text' placeholder='promote order' label='Promote' value={this.state.promote}
-								onChange={this.onInputChanged.bind(this, 'promote')}/>
+						<Col xs={6} md={4}>
+							<Input type='select' label='Put On Banner Slot' value={this.state.promote}
+								placeholder='select slot position' onChange={this.onInputChanged.bind(this, 'promote')}>
+								{promoteSelectionViews}
+							</Input>
 						</Col>
 						<Col xs={12}>
 							<Input type='textarea' placeholder='location' label='Location' value={this.state.location}
 								onChange={this.onInputChanged.bind(this, 'location')}/>
 						</Col>
-						<Col xs={4}>
-							<Input type='text' placeholder='type' label='Type' value={this.state.type}
-								onChange={this.onInputChanged.bind(this, 'type')}/>
+						<Col xs={6} md={4}>
+							<Input type='select' label='Project Type' value={this.state.type}
+								placeholder='select type' onChange={this.onInputChanged.bind(this, 'type')}>
+								{projectTypeViews}
+							</Input>
 						</Col>
-						<Col xs={4}>
+						<Col xs={6} md={4}>
 							<Input type='text' placeholder='area' label='Area' value={this.state.area}
 								onChange={this.onInputChanged.bind(this, 'area')}/>
 						</Col>
-						<Col xs={4}>
+						<Col xs={6} md={4}>
 							<Input type='text' placeholder='status' label='Status' value={this.state.status}
 								onChange={this.onInputChanged.bind(this, 'status')}/>
 						</Col>
+						<Col xs={6} md={4}>
+							<Input type='text' placeholder='order' label='Sort Order' value={this.state.order}
+								onChange={this.onInputChanged.bind(this, 'order')}/>
+						</Col>
+						<Col xs={6} md={4}>
+							<GnImageInput ref='banner' label='Banner' imageUrl={this.props.building&&this.props.building.banner}/>
+						</Col>
+						<Col xs={6} md={4}>
+							<GnImageInput ref='thumbnail' label='Thumbnail' imageUrl={this.props.building&&this.props.building.thumbnail}/>
+						</Col>
 					</Row>
-					<GnImageInput ref='banner' label='Banner' imageUrl={this.props.building&&this.props.building.banner}/>
-					<GnImageInput ref='thumbnail' label='Thumbnail' imageUrl={this.props.building&&this.props.building.thumbnail}/>
 				</Panel>
 				<Panel header='Details'>
 					{contentSegmentsViews}
@@ -98,6 +110,7 @@ class BuildingEditor extends React.Component {
 		return {
 			name: building&&building.name||'',
 			index: building&&building.index||'',
+			order: building&&building.order||'',
 			category: building&&building.category||'',
 			label: building&&building.label||'',
 			promote: building&&building.promote||'',
@@ -126,6 +139,7 @@ class BuildingEditor extends React.Component {
 		var fields = {
 			name: this.state.name,
 			index: this.state.index,
+			order: this.state.order,
 			category: this.state.category,
 			label: this.state.label,
 			promote: this.state.promote,
@@ -182,8 +196,10 @@ export default Relay.createContainer(BuildingEditor, {
 	fragments: {
 		user: () => Relay.QL`
 			fragment on User {
+				bannerCount,
 				categories,
 				labels,
+				projectTypes,
 				${CreateBuildingMutation.getFragment('user')},
 				${RemoveBuildingMutation.getFragment('user')},
 			}
@@ -193,6 +209,7 @@ export default Relay.createContainer(BuildingEditor, {
 				id,
 				name,
 				index,
+				order,
 				category,
 				label,
 				promote,

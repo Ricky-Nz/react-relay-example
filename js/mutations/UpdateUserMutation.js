@@ -17,8 +17,10 @@ export default class UpdateUserMutation extends Relay.Mutation {
 			fragment on UpdateUserPayload {
 				user {
 					id,
+					bannerCount,
 					categories,
-					labels
+					labels,
+					projectTypes
 				}
 			}
 		`
@@ -34,8 +36,10 @@ export default class UpdateUserMutation extends Relay.Mutation {
 	getVariables() {
 		return {
 			name: this.props.user.name,
+			bannerCount: this.props.bannerCount,
 			categories: this.props.categories,
-			labels: this.props.labels
+			labels: this.props.labels,
+			projectTypes: this.props.projectTypes
 		};
 	}
 }

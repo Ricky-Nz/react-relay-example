@@ -1,12 +1,12 @@
 import React from 'react';
 import Relay from 'react-relay';
-import { Row, Col, Panel } from 'react-bootstrap';
+import { Row, Col, Panel, Nav, NavItem } from 'react-bootstrap';
 import { GnImageCarousel, GnNavbar } from './elements';
 import BuildingGrid from './BuildingGrid';
 
 class MainPage extends React.Component {
 	render() {
-		const banners = this.props.app.user.promotes.edges.map(edge => edge.node.banner);
+		const { user } = this.props.app;
 		const topItem = {
 			marginTop: 50
 		};
@@ -18,14 +18,20 @@ class MainPage extends React.Component {
 			height: 180,
 			backgroundColor: '#29B6F6'
 		};
+		const banners = user.promotes.edges.map(edge => edge.node.banner);
+		const categoryViews = user.categories.map((category, index) =>
+			<NavItem key={index} eventKey={index} href='#'>{category}</NavItem>);
 
 		return (
 			<div>
 				<GnNavbar title='Arc studio' fixedTop/>
-				<GnImageCarousel style={topItem} height={400} imageUrls={banners}/>
-				<br/>
+				<GnImageCarousel style={topItem} height={400} imageUrls={banners} interval={4000} indicators/>
+				<br/><br/><br/>
 				<Row>
 					<Col xs={10} xsOffset={1} md={8} mdOffset={2}>
+						<Nav bsStyle='pills' onSelect={key => console.log(key)}>
+							{categoryViews}
+						</Nav>
 						<BuildingGrid user={this.props.app.user} onItemClick={this.onItemClick.bind(this)}/>
 					</Col>
 				</Row>
@@ -49,8 +55,10 @@ export default Relay.createContainer(MainPage, {
 		app: () => Relay.QL`
 			fragment on App {
 				user(name: $username) {
+					categories,
+					labels,
 					${BuildingGrid.getFragment('user')},
-					promotes(first: 6) {
+					promotes(first: 60) {
 						edges {
 							node {
 								id,

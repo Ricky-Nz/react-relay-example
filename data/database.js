@@ -11,6 +11,7 @@ export var DBBuilding = mongoose.model('DBBuilding', new Schema({
 	userId: { type: Schema.Types.ObjectId, required: true },
 	name: { type: String, required: true },
 	index: { type: String },
+	order: { type: String },
 	category: { type: String },
 	label: { type: String },
 	promote: { type: Number },
@@ -25,12 +26,14 @@ export var DBBuilding = mongoose.model('DBBuilding', new Schema({
 
 export var DBUser = mongoose.model('DBUser', new Schema({
 	name: { type: String, unique: true, required: true },
+	bannerCount: { type: Number },
 	categories: [String],
-	labels: [String]
+	labels: [String],
+	projectTypes: [String]
 }));
 
 export function findBuildingsByUser(userId) {
-	return DBBuilding.find({userId}).exec();
+	return DBBuilding.find({userId}).sort({order: -1, name: 1}).exec();
 }
 
 export function findPromoteBuildingsByUser(userId) {

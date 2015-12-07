@@ -112,6 +112,9 @@ var GraphQLBuilding = new GraphQLObjectType({
 		index: {
 			type: GraphQLString
 		},
+		order: {
+			type: GraphQLString
+		},
 		category: {
 			type: GraphQLString
 		},
@@ -162,10 +165,16 @@ var GraphQLUser = new GraphQLObjectType({
 		name: {
 			type: GraphQLString
 		},
+		bannerCount: {
+			type: GraphQLInt
+		},
 		categories: {
 			type: new GraphQLList(GraphQLString)
 		},
 		labels: {
+			type: new GraphQLList(GraphQLString)
+		},
+		projectTypes: {
 			type: new GraphQLList(GraphQLString)
 		},
 		buildings: {
@@ -253,10 +262,16 @@ var updateUserMutation = mutationWithClientMutationId({
 		name: {
 			type: new GraphQLNonNull(GraphQLString)
 		},
+		bannerCount: {
+			type: GraphQLInt
+		},
 		categories: {
 			type: new GraphQLList(GraphQLString)
 		},
 		labels: {
+			type: new GraphQLList(GraphQLString)
+		},
+		projectTypes: {
 			type: new GraphQLList(GraphQLString)
 		}
 	},
@@ -281,6 +296,9 @@ var createBuildingMutation = mutationWithClientMutationId({
 			type: new GraphQLNonNull(GraphQLString)
 		},
 		index: {
+			type: GraphQLString
+		},
+		order: {
 			type: GraphQLString
 		},
 		category: {
@@ -347,6 +365,9 @@ var updateBuildingMutation = mutationWithClientMutationId({
 		},
 		name: {
 			type: new GraphQLNonNull(GraphQLString)
+		},
+		order: {
+			type: GraphQLString
 		},
 		category: {
 			type: GraphQLString

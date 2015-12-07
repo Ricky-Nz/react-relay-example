@@ -137,6 +137,18 @@
               "deprecationReason": null
             },
             {
+              "name": "bannerCount",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "categories",
               "description": null,
               "args": [],
@@ -154,6 +166,22 @@
             },
             {
               "name": "labels",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "projectTypes",
               "description": null,
               "args": [],
               "type": {
@@ -359,6 +387,18 @@
             },
             {
               "name": "index",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "order",
               "description": null,
               "args": [],
               "type": {
@@ -992,6 +1032,16 @@
               "defaultValue": null
             },
             {
+              "name": "bannerCount",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
               "name": "categories",
               "description": null,
               "type": {
@@ -1007,6 +1057,20 @@
             },
             {
               "name": "labels",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "projectTypes",
               "description": null,
               "type": {
                 "kind": "LIST",
@@ -1113,6 +1177,16 @@
             },
             {
               "name": "index",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "order",
               "description": null,
               "type": {
                 "kind": "SCALAR",
@@ -1361,6 +1435,16 @@
                   "name": "String",
                   "ofType": null
                 }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "order",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
               },
               "defaultValue": null
             },

@@ -38,6 +38,7 @@ export default class CreateBuildingMutation extends Relay.Mutation {
 			userId: this.props.user.id,
 			name: this.props.name,
 			index: this.props.index,
+			order: this.props.order,
 			category: this.props.category,
 			label: this.props.label,
 			promote: this.props.promote,

@@ -13,8 +13,8 @@ class BuildingList extends React.Component {
 		};
 		const buildingItems = this.props.user.buildings.edges.map(({node}, index) => {
 			return (
-				<ListGroupItem key={index} href={`#/console/project?username=${this.props.user.name}&select=${node.id}`}>
-					{node.name}
+				<ListGroupItem key={index} header={node.name} href={`#/console/project?username=${this.props.user.name}&select=${node.id}`}>
+					{`${node.order&&('Order:'+node.order)||''} ${node.promote&&('Banner Slot:'+node.promote)||''}`}
 				</ListGroupItem>
 			);
 		});
@@ -41,7 +41,9 @@ export default Relay.createContainer(BuildingList, {
 					edges {
 						node {
 							id,
-							name
+							name,
+							order,
+							promote
 						}
 					}
 				}
