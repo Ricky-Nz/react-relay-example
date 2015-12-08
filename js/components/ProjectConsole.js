@@ -6,13 +6,13 @@ import BuildingList from './BuildingList'
 import BuildingEditor from './BuildingEditor';
 
 class ProjectConsole extends React.Component {
-	render() {
+	render() {console.log(this.props);
 		const { user, building } = this.props.app;
 
 		return (
 			<Row>
 				<Col xs={3} xsOffset={1}>
-					<BuildingList user={user}/>
+					<BuildingList user={user} select={this.props.location.query.select}/>
 				</Col>
 				<Col xs={7}>
 					<BuildingEditor user={user} building={building||null}/>

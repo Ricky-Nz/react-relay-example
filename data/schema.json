@@ -201,6 +201,20 @@
               "description": null,
               "args": [
                 {
+                  "name": "labels",
+                  "description": null,
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
                   "name": "after",
                   "description": null,
                   "type": {

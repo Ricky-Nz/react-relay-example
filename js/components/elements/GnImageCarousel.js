@@ -8,13 +8,14 @@ class GnImageCarousel extends React.Component {
 			const imageBackground = {
 				width: width,
 				height: height,
-	  			background: `url(${imageUrl}) no-repeat`,
+	  			background: `url(${'/'+imageUrl}) no-repeat`,
 	  			backgroundSize: 'cover',
 	  			backgroundPosition: 'center'
 			};
 
 			return (
-				<CarouselItem key={index}>
+				<CarouselItem key={index}
+					onClick={this.props.onItemSelect&&()=>this.props.onItemSelect(index)}>
 					<div style={imageBackground}/>
 				</CarouselItem>
 			);
@@ -33,7 +34,8 @@ GnImageCarousel.propTypes = {
 	imageUrls: PropTypes.arrayOf(PropTypes.string).isRequired,
 	interval: PropTypes.number,
 	defaultActiveIndex: PropTypes.number,
-	indicators: PropTypes.bool
+	indicators: PropTypes.bool,
+	onItemSelect: PropTypes.func
 };
 
 GnImageCarousel.defaultProps = {

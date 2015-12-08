@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom';
 import { IndexRoute, Route } from 'react-router';
 import { RelayRouter } from 'react-router-relay';
 import { createHashHistory } from 'history';
+import useScroll from 'scroll-behavior/lib/useStandardScroll';
 
 import RootQueries from './queries/RootQueries';
 import MainPage from './components/MainPage';
@@ -25,10 +26,10 @@ class Root extends React.Component {
 }
 
 ReactDOM.render(
-	<RelayRouter history={createHashHistory({ queryKey: false })}>
+	<RelayRouter history={useScroll(createHashHistory)()}>
 		<Route path='/' component={Root}>
 			<IndexRoute component={MainPage} queries={RootQueries}
-				queryParams={['username']}/>
+				queryParams={['username', 'filter']}/>
 			<Route path='project/:id' component={ProjectPage}
 				queries={RootQueries} queryParams={['username']}/>
 			<Route path='console' component={BackendConsole}>

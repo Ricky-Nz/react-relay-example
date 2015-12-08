@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import Relay from 'react-relay';
 import { Link } from 'react-router';
 import { Row, Col, ListGroup, ListGroupItem, Button, Glyphicon } from 'react-bootstrap';
@@ -13,7 +13,8 @@ class BuildingList extends React.Component {
 		};
 		const buildingItems = this.props.user.buildings.edges.map(({node}, index) => {
 			return (
-				<ListGroupItem key={index} header={node.name} href={`#/console/project?username=${this.props.user.name}&select=${node.id}`}>
+				<ListGroupItem key={index} header={node.name} active={node.id===this.props.select}
+					href={`#/console/project?username=${this.props.user.name}&select=${node.id}`}>
 					{`${node.order&&('Order:'+node.order)||''} ${node.promote&&('Banner Slot:'+node.promote)||''}`}
 				</ListGroupItem>
 			);
@@ -31,6 +32,10 @@ class BuildingList extends React.Component {
 		);
 	}
 }
+
+BuildingList.propTypes = {
+	select: PropTypes.string
+};
 
 export default Relay.createContainer(BuildingList, {
 	fragments: {

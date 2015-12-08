@@ -4,10 +4,12 @@ import { Row, Col, Pager, PageItem } from 'react-bootstrap';
 import { GnNavbar, GnImageCarousel } from './elements';
 import ProjectNamecard from './ProjectNamecard';
 import ProjectSegment from './ProjectSegment';
+import PageFooter from './PageFooter';
+import _ from 'underscore';
 
 class ProjectPage extends React.Component {
 	render() {
-		const { building } = this.props.app;
+		const { building, user } = this.props.app;
 		const topItem = {
 			marginTop: 50
 		};
@@ -19,7 +21,10 @@ class ProjectPage extends React.Component {
 			top: -85
 		};
 		const segmentPages = building.segments.map((segment, index) =>
-			<ProjectSegment key={index} segment={segment}/>)
+			<ProjectSegment key={index} segment={segment}/>);
+		const index = _.findIndex(user.buildings.edges, ({node}) => node.id === building.id);
+		const previousItem = user.buildings.edges[index-1];
+		const nextItem = user.buildings.edges[index+1];
 
 		return (
 			<div>
@@ -32,11 +37,12 @@ class ProjectPage extends React.Component {
 				</Row>
 				{segmentPages}
 				<Pager>
-					<PageItem href="#">Previous</PageItem>
+					<PageItem href={`#/project/${previousItem&&previousItem.node.id}`} disabled={!previousItem}>Previous</PageItem>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<PageItem href="#">Next</PageItem>
+					<PageItem href={`#/project/${nextItem&&nextItem.node.id}`} disabled={!nextItem}>Next</PageItem>
 				</Pager>
-				<br/><br/><br/><br/><br/><br/>
+				<br/><br/><br/><br/>
+				<PageFooter/>
 			</div>
 		);
 	}
@@ -50,11 +56,21 @@ export default Relay.createContainer(ProjectPage, {
 		app: () => Relay.QL`
 			fragment on App {
 				building(id: $id) {
+					id,
 					banner,
 					thumbnail,
 					${ProjectNamecard.getFragment('building')},
 					segments {
 						${ProjectSegment.getFragment('segment')}
+					}
+				},
+				user {
+					buildings(first: 1000) {
+						edges {
+							node {
+								id
+							}
+						}
 					}
 				}
 			}

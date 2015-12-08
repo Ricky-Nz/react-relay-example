@@ -179,9 +179,15 @@ var GraphQLUser = new GraphQLObjectType({
 		},
 		buildings: {
 			type: BuildingsConnection,
-			args: connectionArgs,
-			resolve: (user, args) => {
-				return findBuildingsByUser(user._id)
+			args: {
+				labels: {
+					type: new GraphQLList(GraphQLString)
+				},
+				...connectionArgs
+			},
+			resolve: (user, {labels, ...args}) => {
+				console.log(labels);
+				return findBuildingsByUser(user._id, labels)
 					.then(buildings => connectionFromArray(buildings, args));
 			}
 		},

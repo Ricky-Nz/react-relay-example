@@ -32,8 +32,12 @@ export var DBUser = mongoose.model('DBUser', new Schema({
 	projectTypes: [String]
 }));
 
-export function findBuildingsByUser(userId) {
-	return DBBuilding.find({userId}).sort({order: -1, name: 1}).exec();
+export function findBuildingsByUser(userId, labels) {
+	let query = {userId};
+	if (labels&&labels.length>0) {
+		query.label = { $in: labels };
+	}
+	return DBBuilding.find(query).sort({order: -1, name: 1}).exec();
 }
 
 export function findPromoteBuildingsByUser(userId) {
