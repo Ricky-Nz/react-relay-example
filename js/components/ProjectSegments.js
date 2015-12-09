@@ -63,12 +63,12 @@ class ProjectSegments extends React.Component {
 					break;
 				case 'MIDDLE':
 					segmentEdge.push(
-						<Col key={`t-${index}`} style={contentStyle} xs={10} xsOffset={1}>
+						<Col key={`t-${index}`} style={contentStyle} {...bslayout} sm={8} smOffset={2}>
 							<SegmentText segment={segment}/>
 						</Col>
 					);
 					segmentEdge.push(
-						<Col key={`i-${index}`} style={contentStyle} xs={10} xsOffset={1}>
+						<Col key={`i-${index}`} style={contentStyle} {...bslayout} sm={8} smOffset={2}>
 							<SegmentImages segment={segment} height={300}/>
 						</Col>
 					);
