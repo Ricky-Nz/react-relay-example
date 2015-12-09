@@ -22,7 +22,7 @@ class GnSelectableTags extends React.Component {
 		return (
 			<div style={contentStyle}>
 				<Button style={itemStyle} bsSize='xsmall' bsStyle={hasSelection?'default':'info'}
-					onClick={this.onItemClick.bind(this)}>All</Button>
+					onClick={this.onItemClick.bind(this, null)}>All</Button>
 				{itemViews}
 			</div>
 		);

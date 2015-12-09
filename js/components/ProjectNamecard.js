@@ -5,16 +5,16 @@ import Relay from 'react-relay';
 class ProjectNamecard extends React.Component {
 	render() {
 		const building = this.props.building;
-		const contentStyle = {
+		const contentStyle = Object.assign({
 			padding: 18,
 			background: 'rgba(0, 128, 255, 0.5)',
 			color: 'white'
-		};
+		}, this.props.style);
 		const titleFont = {
 			fontSize: '2em'
 		};
 		return (
-			<div style={Object.assign({}, contentStyle, this.props.style)}>
+			<div style={contentStyle}>
 				PROJECT NAME
 				<div style={titleFont}>{`${building.index} | ${building.name}`}</div>
 				<Row>

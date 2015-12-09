@@ -8,7 +8,8 @@ class GnImageCarousel extends React.Component {
 			const imageBackground = {
 				width: width,
 				height: height,
-	  			background: `url(${'/'+imageUrl}) no-repeat`,
+				backgroundImage: `url(${'/'+imageUrl})`,
+				backgroundRepeat: 'no-repeat',
 	  			backgroundSize: 'cover',
 	  			backgroundPosition: 'center'
 			};
