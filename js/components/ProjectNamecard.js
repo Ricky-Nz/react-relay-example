@@ -7,7 +7,7 @@ class ProjectNamecard extends React.Component {
 		const building = this.props.building;
 		const contentStyle = Object.assign({
 			padding: '20px 30px',
-			background: 'rgba(0, 128, 255, 0.5)',
+			background: 'rgba(41, 182, 246, 0.75)',
 			color: 'white'
 		}, this.props.style);
 		const titleFont = {
