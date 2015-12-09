@@ -10,7 +10,7 @@ class ProjectSegments extends React.Component {
 	render() {
 		const building = this.props.building;
 		const contentStyle = {
-			padding: '30px 10px',
+			padding: '30px 20px',
 		    display: 'inline-block',
 		    verticalAlign: 'middle',
 		    'float': 'none'
@@ -19,19 +19,17 @@ class ProjectSegments extends React.Component {
 			xs: 10,
 			xsOffset: 1,
 			sm: 4,
-			smOffset: 0,
-			md: 3,
-			mdOffset: 0
+			smOffset: 0
 		};
 		const bsOffset = {
-			smOffset: 2,
-			mdOffset: 3
+			smOffset: 2
 		};
 
 		let segmentItems = building.segments.map((segment, index) => {
 			if (index == 0) {
 				return (
 					<Col key={index} style={contentStyle} {...bslayout}>
+						<br/><br/>
 						<SegmentText segment={segment}/>
 					</Col>
 				);
@@ -65,12 +63,12 @@ class ProjectSegments extends React.Component {
 					break;
 				case 'MIDDLE':
 					segmentEdge.push(
-						<Col key={`t-${index}`} style={contentStyle} xs={10} xsOffset={1} md={6} mdOffset={3}>
+						<Col key={`t-${index}`} style={contentStyle} xs={10} xsOffset={1}>
 							<SegmentText segment={segment}/>
 						</Col>
 					);
 					segmentEdge.push(
-						<Col key={`i-${index}`} style={contentStyle} xs={10} xsOffset={1} md={6} mdOffset={3}>
+						<Col key={`i-${index}`} style={contentStyle} xs={10} xsOffset={1}>
 							<SegmentImages segment={segment} height={300}/>
 						</Col>
 					);
@@ -89,7 +87,7 @@ class ProjectSegments extends React.Component {
 		segmentItems = _.flatten(segmentItems)
 		segmentItems.unshift(
 			<Col key='start' style={{position:'relative'}} {...bslayout} {...bsOffset}>
-				<ProjectNamecard style={{position:'absolute',top:-77}} building={building}/>
+				<ProjectNamecard style={{position:'absolute',top:-79}} building={building}/>
 				<div style={{height:150}}/>
 			</Col>
 		);

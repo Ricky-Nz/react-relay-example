@@ -21,7 +21,7 @@ class BuildingGridItem extends React.Component {
 			flexDirection: 'row',
 			alignItems: 'center',
 			padding: '0px 10px 0px 0px',
-			height: 40,
+			height: 44,
 			background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.7),  rgba(0, 0, 0, 0))'
 		};
 		const indexFont = {
