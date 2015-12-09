@@ -185,11 +185,9 @@ var GraphQLUser = new GraphQLObjectType({
 				},
 				...connectionArgs
 			},
-			resolve: (user, {labels, ...args}) => {
-				console.log(labels);
-				return findBuildingsByUser(user._id, labels)
-					.then(buildings => connectionFromArray(buildings, args));
-			}
+			resolve: (user, {labels, ...args}) =>
+				findBuildingsByUser(user._id, labels)
+					.then(buildings => connectionFromArray(buildings, args))
 		},
 		promotes: {
 			type: BuildingsConnection,

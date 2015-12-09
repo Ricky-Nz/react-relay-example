@@ -9,7 +9,11 @@ class MainPage extends React.Component {
 	render() {
 		const { user } = this.props.app;
 		const topItem = {
-			marginTop: 50
+			marginTop: 50,
+			zIndex: 3,
+			WebkitBoxShadow: 'inset 0px 0px 35px 0px rgba(10,10,0,0.5)',
+			MozBoxShadow: 'inset 0px 0px 35px 0px rgba(10,10,0,0.5)',
+			boxShadow: 'inset 0px 0px 35px 0px rgba(10,10,0,0.5)'
 		};
 		const gridContentStyle = {
 			display: 'flex',
