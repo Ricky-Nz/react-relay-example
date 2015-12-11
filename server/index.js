@@ -5,7 +5,7 @@ import multer from 'multer';
 import path from 'path';
 import { schema } from './schema';
 
-mongoose.connect('mongodb://localhost/arcstudio');
+mongoose.connect('mongodb://0.0.0.0/arcstudio');
 
 const PORT = process.env.PORT||3000;
 
