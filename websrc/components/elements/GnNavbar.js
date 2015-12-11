@@ -16,6 +16,7 @@ class GnNavbar extends React.Component {
 					<Navbar.Brand>
 						<a href="#">{title}</a>
 					</Navbar.Brand>
+					<Navbar.Toggle/>
 				</Navbar.Header>
 				<Navbar.Collapse>
 					<Nav>

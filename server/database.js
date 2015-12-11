@@ -59,6 +59,10 @@ export function findUserById(id) {
 export function createUser(name) {
 	var user = new DBUser();
 	user.name = name;
+	user.bannerCount = 6;
+	user.categories = [];
+	user.labels = [];
+	user.projectTypes = [];
 	return user.save();
 }
 

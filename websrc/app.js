@@ -1,6 +1,5 @@
-import 'babel/polyfill';
-
 import React from 'react';
+import Relay from 'react-relay';
 import ReactDOM from 'react-dom';
 
 import { IndexRoute, Route } from 'react-router';
@@ -14,6 +13,10 @@ import ProjectPage from './components/ProjectPage';
 import BackendConsole from './components/BackendConsole';
 import ProjectConsole from './components/ProjectConsole';
 import ConfigureConsole from './components/ConfigureConsole';
+
+Relay.injectNetworkLayer(
+	new Relay.DefaultNetworkLayer('/api/graphql')
+);
 
 class Root extends React.Component {
 	render() {

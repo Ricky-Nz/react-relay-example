@@ -35,6 +35,7 @@ export default class UpdateUserMutation extends Relay.Mutation {
 	}
 	getVariables() {
 		return {
+			password: this.props.password,
 			name: this.props.user.name,
 			bannerCount: this.props.bannerCount,
 			categories: this.props.categories,

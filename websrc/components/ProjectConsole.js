@@ -6,7 +6,7 @@ import BuildingList from './BuildingList'
 import BuildingEditor from './BuildingEditor';
 
 class ProjectConsole extends React.Component {
-	render() {console.log(this.props);
+	render() {
 		const { user, building } = this.props.app;
 
 		return (

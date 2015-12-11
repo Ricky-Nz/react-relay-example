@@ -16,7 +16,7 @@ class GnImageCarousel extends React.Component {
 
 			return (
 				<CarouselItem key={index}
-					onClick={this.props.onItemSelect&&()=>this.props.onItemSelect(index)}>
+					onClick={this.props.onItemSelect&&(()=>this.props.onItemSelect(index))}>
 					<div style={imageBackground}/>
 				</CarouselItem>
 			);

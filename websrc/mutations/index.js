@@ -3,7 +3,7 @@ import UpdateBuildingMutation from './UpdateBuildingMutation';
 import RemoveBuildingMutation from './RemoveBuildingMutation';
 import UpdateUserMutation from './UpdateUserMutation';
 
-export default {
+export {
 	CreateBuildingMutation,
 	UpdateBuildingMutation,
 	RemoveBuildingMutation,

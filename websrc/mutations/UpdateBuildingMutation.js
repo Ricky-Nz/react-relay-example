@@ -1,41 +1,48 @@
 import Relay from 'react-relay';
 
-export default class CreateBuildingMutation extends Relay.Mutation {
+export default class UpdateBuildingMutation extends Relay.Mutation {
 	static fragments = {
-		user: () => Relay.QL`
-			fragment on User {
+		building: () => Relay.QL`
+			fragment on Building {
 				id
 			}
 		`
 	};
 	getMutation() {
-		return Relay.QL`mutation{createBuilding}`;
+		return Relay.QL`mutation{updateBuilding}`;
 	}
 	getFatQuery() {
 		return Relay.QL`
-			fragment on CreateBuildingPayload {
-				buildingEdge,
-				user {
-					buildings
+			fragment on UpdateBuildingPayload {
+				building {
+					id,
+					name,
+					index,
+					order,
+					category,
+					label,
+					promote,
+					location,
+					type,
+					area,
+					status,
+					segments
 				}
 			}
-		`
+		`;
 	}
 	getConfigs() {
 		return [{
-			type: 'RANGE_ADD',
-			parentName: 'user',
-			parentID: this.props.user.id,
-			connectionName: 'buildings',
-			edgeName: 'buildingEdge',
-			rangeBehaviors: {
-				'': 'append'
+			type: 'FIELDS_CHANGE',
+			fieldIDs: {
+				building: this.props.building.id
 			}
 		}];
 	}
 	getVariables() {
 		return {
-			userId: this.props.user.id,
+			password: this.props.password,
+			id: this.props.building.id,
 			name: this.props.name,
 			index: this.props.index,
 			order: this.props.order,
@@ -53,3 +60,7 @@ export default class CreateBuildingMutation extends Relay.Mutation {
 		return this.props.fileMap;
 	}
 }
+
+
+
+

@@ -37,7 +37,13 @@ import {
 	removeBuilding
 } from './database';
 
+import fs from 'fs';
+import path from 'path';
 import _ from 'underscore';
+
+function confirmPassword(password) {
+	return fs.readFileSync(path.join(__dirname, 'password.json'), 'utf-8') === password;
+}
 
 var {nodeInterface, nodeField} = nodeDefinitions(
 	(globalId) => {
@@ -213,7 +219,13 @@ var GraphQLApp = new GraphQLObjectType({
 				}
 			},
 			resolve: (app, {name}) =>
-				findUserByName(name||'ruiqi').then(user => user)
+				findUserByName(name||'ruiqi').then(user => {
+					if (!user) {
+						return createUser('ruiqi').then(user => user);
+					} else {
+						return user;
+					}
+				})
 		},
 		building: {
 			type: GraphQLBuilding,
@@ -240,29 +252,13 @@ var queryType = new GraphQLObjectType({
 	})
 });
 
-var createUserMutation = mutationWithClientMutationId({
-	name: 'CreateUser',
-	description: 'Create new user',
-	inputFields: {
-		name: {
-			type: new GraphQLNonNull(GraphQLString)
-		}
-	},
-	outputFields: {
-		user: {
-			type: GraphQLUser,
-			resolve: ({userId}) =>
-				findUserById(userId).then(user => user)
-		}
-	},
-	mutateAndGetPayload: ({name}) =>
-		createUser(name).then(user => ({userId: user._id}))
-});
-
 var updateUserMutation = mutationWithClientMutationId({
 	name: 'UpdateUser',
 	description: 'update user configuration',
 	inputFields: {
+		password: {
+			type: new GraphQLNonNull(GraphQLString)
+		},
 		name: {
 			type: new GraphQLNonNull(GraphQLString)
 		},
@@ -286,13 +282,21 @@ var updateUserMutation = mutationWithClientMutationId({
 				findUserById(userId).then(user => user)
 		}
 	},
-	mutateAndGetPayload: (args) =>
-		updateUser(args).then(user => ({userId: user._id}))
-})
+	mutateAndGetPayload: ({password, ...args}) => {
+		if (confirmPassword(password)) {
+			return updateUser(args).then(user => ({userId: user._id}));
+		} else {
+			return null;
+		}
+	}
+});
 
 var createBuildingMutation = mutationWithClientMutationId({
 	name: 'CreateBuilding',
 	inputFields: {
+		password: {
+			type: new GraphQLNonNull(GraphQLString)
+		},
 		userId: {
 			type: new GraphQLNonNull(GraphQLID)
 		},
@@ -351,19 +355,26 @@ var createBuildingMutation = mutationWithClientMutationId({
 			}
 		}
 	},
-	mutateAndGetPayload: ({userId, ...fields}, {rootValue}) => {
-		const {type, id} = fromGlobalId(userId);
-		return createBuilding({userId: id, ...fields}, rootValue.request.files)
-			.then(building => ({
-				buildingId: building._id,
-				userId: id
-			}));
+	mutateAndGetPayload: ({userId, password, ...fields}, {rootValue}) => {
+		if (confirmPassword(password)) {
+			const {type, id} = fromGlobalId(userId);
+			return createBuilding({userId: id, ...fields}, rootValue.request.files)
+				.then(building => ({
+					buildingId: building._id,
+					userId: id
+				}));
+		} else {
+			return null;
+		}
 	}
 });
 
 var updateBuildingMutation = mutationWithClientMutationId({
 	name: 'UpdateBuilding',
 	inputFields: {
+		password: {
+			type: new GraphQLNonNull(GraphQLString)
+		},
 		id: {
 			type: new GraphQLNonNull(GraphQLID)
 		},
@@ -408,16 +419,23 @@ var updateBuildingMutation = mutationWithClientMutationId({
 				.then(building => building)
 		}
 	},
-	mutateAndGetPayload: ({id, ...fields}, {rootValue}) => {
-		const {type, id: buildingId} = fromGlobalId(id);
-		return updateBuilding({id: buildingId, ...fields}, rootValue.request.files)
-			.then(building => building._id);
+	mutateAndGetPayload: ({id, password, ...fields}, {rootValue}) => {
+		if (confirmPassword(password)) {
+			const {type, id: buildingId} = fromGlobalId(id);
+			return updateBuilding({id: buildingId, ...fields}, rootValue.request.files)
+				.then(building => building._id);
+		} else {
+			return null;
+		}
 	}
 });
 
 var removeBuildingMutation = mutationWithClientMutationId({
 	name: 'RemoveBuilding',
 	inputFields: {
+		password: {
+			type: new GraphQLNonNull(GraphQLString)
+		},
 		id: {
 			type: new GraphQLNonNull(GraphQLID)
 		}
@@ -433,20 +451,23 @@ var removeBuildingMutation = mutationWithClientMutationId({
 				.then(user => user)
 		}
 	},
-	mutateAndGetPayload: ({id}) => {
-		const {type, id: localId} = fromGlobalId(id);
-		return removeBuilding(localId)
-			.then(removedBuilding => ({
-				buildingId: id,
-				userId: removedBuilding.userId
-			}));
+	mutateAndGetPayload: ({id, password}) => {
+		if (confirmPassword(password)) {
+			const {type, id: localId} = fromGlobalId(id);
+			return removeBuilding(localId)
+				.then(removedBuilding => ({
+					buildingId: id,
+					userId: removedBuilding.userId
+				}));
+		} else {
+			return null;
+		}
 	}
 })
 
 var mutationType = new GraphQLObjectType({
 	name: 'Mutation',
 	fields: () => ({
-		createUser: createUserMutation,
 		updateUser: updateUserMutation,
 		createBuilding: createBuildingMutation,
 		updateBuilding: updateBuildingMutation,

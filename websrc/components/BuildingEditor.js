@@ -1,6 +1,5 @@
 import React from 'react';
 import Relay from 'react-relay';
-import Dropzone from 'react-dropzone';
 import BuildingSegment from './BuildingSegment';
 import { Input, Button, Row, Col, Image, Panel } from 'react-bootstrap';
 import { GnTags, GnImageInput } from './elements';
@@ -19,7 +18,8 @@ class BuildingEditor extends React.Component {
 		const flexEnd = {
 			display: 'flex',
 			flexDirection: 'row',
-			alignItems: 'flex-end'
+			justifyContent: 'flex-end',
+			alignItems: 'center'
 		};
 		const contentSegmentsViews = this.state.segments.map((segment, index) =>
 			<BuildingSegment ref={`segment-${index}`} key={index} index={index}
@@ -96,12 +96,13 @@ class BuildingEditor extends React.Component {
 						<Button bsSize='small' onClick={this.onSegmentChange.bind(this, -1, false)}>Add</Button>
 					</div>
 				</Panel>
-				<div style={flexEnd}>
-					<p>
-						{this.props.building&&<Button bsSize='small' bsStyle='danger' onClick={this.onDelete.bind(this)}>Delete</Button>}
-						<Button bsSize='small' bsStyle='primary' onClick={this.onSubmit.bind(this)}>Submit</Button>
-					</p>
-				</div>
+				<Row>
+					<Col xs={12} sm={8} md={6} lg={5}>
+						<Input ref='password' type='password' label='Submit' placeholder='password'
+							buttonBefore={this.props.building&&<Button bsStyle='danger' onClick={this.onDelete.bind(this)}>Delete</Button>}
+							buttonAfter={<Button bsStyle='primary' onClick={this.onSubmit.bind(this)}>{this.props.building?'Update':'Create'}</Button>}/>
+					</Col>
+				</Row>
 			</div>
 		);
 	}
@@ -137,6 +138,7 @@ class BuildingEditor extends React.Component {
 	}
 	onSubmit() {
 		var fields = {
+			password: this.refs.password.refs.input.value,
 			name: this.state.name,
 			index: this.state.index,
 			order: this.state.order,
@@ -184,6 +186,7 @@ class BuildingEditor extends React.Component {
 	onDelete() {
 		Relay.Store.update(new RemoveBuildingMutation({
 			building: this.props.building,
+			password: this.refs.password.refs.input.value,
 			user: this.props.user
 		}));
 	}

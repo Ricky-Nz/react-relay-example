@@ -37,6 +37,7 @@ export default class RemoveBuildingMutation extends Relay.Mutation {
 	}
 	getVariables() {
 		return {
+			password: this.props.password,
 			id: this.props.building.id
 		};
 	}

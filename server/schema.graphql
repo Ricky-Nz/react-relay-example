@@ -1,0 +1,150 @@
+type App {
+  user(name: String): User
+  building(id: ID!): Building
+}
+
+type Building implements Node {
+  id: ID!
+  name: String
+  index: String
+  order: String
+  category: String
+  label: String
+  promote: String
+  location: String
+  type: String
+  area: String
+  status: String
+  banner: String
+  thumbnail: String
+  segments: [Segment]
+}
+
+type BuildingConnection {
+  pageInfo: PageInfo!
+  edges: [BuildingEdge]
+}
+
+type BuildingEdge {
+  node: Building
+  cursor: String!
+}
+
+input CreateBuildingInput {
+  password: String!
+  userId: ID!
+  name: String!
+  index: String
+  order: String
+  category: String
+  label: String
+  promote: String
+  location: String
+  type: String
+  area: String
+  status: String
+  segments: [SegmentInput]
+  clientMutationId: String!
+}
+
+type CreateBuildingPayload {
+  buildingEdge: BuildingEdge
+  user: User
+  clientMutationId: String!
+}
+
+type Mutation {
+  updateUser(input: UpdateUserInput!): UpdateUserPayload
+  createBuilding(input: CreateBuildingInput!): CreateBuildingPayload
+  updateBuilding(input: UpdateBuildingInput!): UpdateBuildingPayload
+  removeBuilding(input: RemoveBuildingInput!): RemoveBuildingPayload
+}
+
+interface Node {
+  id: ID!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type Query {
+  app: App
+}
+
+input RemoveBuildingInput {
+  password: String!
+  id: ID!
+  clientMutationId: String!
+}
+
+type RemoveBuildingPayload {
+  deletedBuildingId: String
+  user: User
+  clientMutationId: String!
+}
+
+type Segment {
+  title: String
+  content: String
+  images: [String]
+  mode: String
+}
+
+input SegmentInput {
+  title: String
+  content: String
+  images: [String]
+  mode: String
+}
+
+input UpdateBuildingInput {
+  password: String!
+  id: ID!
+  name: String!
+  order: String
+  category: String
+  label: String
+  index: String
+  promote: String
+  location: String
+  type: String
+  area: String
+  status: String
+  segments: [SegmentInput]
+  clientMutationId: String!
+}
+
+type UpdateBuildingPayload {
+  building: Building
+  clientMutationId: String!
+}
+
+input UpdateUserInput {
+  password: String!
+  name: String!
+  bannerCount: Int
+  categories: [String]
+  labels: [String]
+  projectTypes: [String]
+  clientMutationId: String!
+}
+
+type UpdateUserPayload {
+  user: User
+  clientMutationId: String!
+}
+
+type User implements Node {
+  id: ID!
+  name: String
+  bannerCount: Int
+  categories: [String]
+  labels: [String]
+  projectTypes: [String]
+  buildings(labels: [String], after: String, first: Int, before: String, last: Int): BuildingConnection
+  promotes(after: String, first: Int, before: String, last: Int): BuildingConnection
+}

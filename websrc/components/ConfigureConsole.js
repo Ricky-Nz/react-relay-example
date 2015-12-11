@@ -25,7 +25,8 @@ class ConfigureConsole extends React.Component {
 				</Col>
 				<Col xs={10} xsOffset={1} sm={6} smOffset={3}>
 					<br/><br/>
-					<Button bsStyle='primary' onClick={this.onUpdateUser.bind(this)}>Submit</Button>
+					<Input ref='password' type='password' label='Submit' placeholder='password'
+						buttonAfter={<Button bsStyle='primary' onClick={this.onUpdateUser.bind(this)}>Update</Button>}/>
 				</Col>
 			</Row>
 		);
@@ -40,6 +41,7 @@ class ConfigureConsole extends React.Component {
 	}
 	onUpdateUser() {
 		Relay.Store.update(new UpdateUserMutation({
+			password: this.refs.password.refs.input.value,
 			user: this.props.app.user,
 			bannerCount: this.state.bannerCount,
 			categories: this.refs.category.getTags(),
