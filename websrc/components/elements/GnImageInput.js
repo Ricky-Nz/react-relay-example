@@ -33,7 +33,6 @@ class GnImageInput extends React.Component {
 			flexWrap: 'wrap'
 		};
 		const imagePreviews = this.state.images.map((image, index) => {
-			console.log(typeof image);
 			const preview = (typeof image === 'string' ? image : URL.createObjectURL(image));
 			return (
 				<div key={index} style={imageContent} >

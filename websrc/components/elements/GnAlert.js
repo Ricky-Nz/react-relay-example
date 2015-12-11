@@ -11,34 +11,33 @@ class GnAlert extends React.Component {
 			return null;
 		} else {
 			return (
-		        <Alert bsStyle={this.state.success?'success':'danger'}
-		        	onDismiss={this.dismiss.bind(this)} dismissAfter={this.props.dismissAfter}>
-					<h4>{this.state.message}</h4>
+		        <Alert bsStyle={this.state.pennding?'warning':(this.state.success?'success':'danger')}
+		        	onDismiss={this.dismiss.bind(this)} dismissAfter={this.state.dismissAfter}>
+					<h4>{this.state.pennding?'Submitting':(this.state.success?'Success':'Failed')}</h4>
 		        </Alert>
 			);
 		}
 	}
 	dismiss() {
 		this.setState({
-			show: false,
-			message: ''
+			show: false
 		});
 	}
-	show(message, success) {
+	start() {
 		this.setState({
 			show: true,
-			success,
-			message
+			pennding: true,
+			dismissAfter: null
+		});
+	}
+	finish(success) {
+		this.setState({
+			show: true,
+			pennding: false,
+			dismissAfter: 3000,
+			success
 		});
 	}
 }
-
-GnAlert.propTypes = {
-	dismissAfter: PropTypes.number
-};
-
-GnAlert.defaultProps = {
-	dismissAfter: 3000
-};
 
 export default GnAlert;

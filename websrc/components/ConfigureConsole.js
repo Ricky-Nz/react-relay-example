@@ -58,12 +58,13 @@ class ConfigureConsole extends React.Component {
 			onFailure: this.onMutationFailure.bind(this),
 			onSuccess: this.onMutationSuccess.bind(this)
 		});
+		this.refs.alert.start();
 	}
 	onMutationSuccess(response) {
-		this.refs.alert.show('Success', true);
+		this.refs.alert.finish(true);
 	}
 	onMutationFailure(error) {
-		this.refs.alert.show('Update failed!', false);
+		this.refs.alert.finish(false);
 	}
 }
 

@@ -43,7 +43,7 @@ class MainPage extends React.Component {
 				<br/><br/><br/>
 				<Row>
 					<Col xs={10} xsOffset={1} md={8} mdOffset={2}>
-						<Nav bsStyle='pills' onSelect={key => console.log(key)}>
+						<Nav bsStyle='pills'>
 							{categoryViews}
 						</Nav>
 						<GnSelectableTags tags={tagArray} onItemClick={this.onLabelSelect.bind(this)}/>
