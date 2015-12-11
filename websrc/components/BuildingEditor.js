@@ -2,7 +2,7 @@ import React from 'react';
 import Relay from 'react-relay';
 import BuildingSegment from './BuildingSegment';
 import { Input, Button, Row, Col, Image, Panel } from 'react-bootstrap';
-import { GnTags, GnImageInput } from './elements';
+import { GnTags, GnImageInput, GnAlert } from './elements';
 import { CreateBuildingMutation, UpdateBuildingMutation, RemoveBuildingMutation } from '../mutations';
 import _ from 'underscore';
 
@@ -101,6 +101,7 @@ class BuildingEditor extends React.Component {
 						<Input ref='password' type='password' label='Submit' placeholder='password'
 							buttonBefore={this.props.building&&<Button bsStyle='danger' onClick={this.onDelete.bind(this)}>Delete</Button>}
 							buttonAfter={<Button bsStyle='primary' onClick={this.onSubmit.bind(this)}>{this.props.building?'Update':'Create'}</Button>}/>
+						<GnAlert ref='alert'/>
 					</Col>
 				</Row>
 			</div>
@@ -176,11 +177,17 @@ class BuildingEditor extends React.Component {
 		if (this.props.building) {
 			Relay.Store.update(new UpdateBuildingMutation({
 				building: this.props.building, ...fields
-			}));
+			}), {
+				onFailure: this.onMutationFailure.bind(this),
+				onSuccess: this.onMutationSuccess.bind(this)
+			});
 		} else {
 			Relay.Store.update(new CreateBuildingMutation({
 				user: this.props.user, ...fields
-			}));
+			}), {
+				onFailure: this.onMutationFailure.bind(this),
+				onSuccess: this.onMutationSuccess.bind(this)
+			});
 		}
 	}
 	onDelete() {
@@ -188,7 +195,16 @@ class BuildingEditor extends React.Component {
 			building: this.props.building,
 			password: this.refs.password.refs.input.value,
 			user: this.props.user
-		}));
+		}), {
+			onFailure: this.onMutationFailure.bind(this),
+			onSuccess: this.onMutationSuccess.bind(this)
+		});
+	}
+	onMutationSuccess(response) {
+		this.refs.alert.show('Success', true);
+	}
+	onMutationFailure(error) {
+		this.refs.alert.show('Update failed!', false);
 	}
 }
 

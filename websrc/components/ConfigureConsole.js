@@ -1,7 +1,7 @@
 import React from 'react';
 import Relay from 'react-relay';
 import { Row, Col, Button, Input } from 'react-bootstrap';
-import { GnTags } from './elements';
+import { GnTags, GnAlert } from './elements';
 import { UpdateUserMutation } from '../mutations';
 
 class ConfigureConsole extends React.Component {
@@ -27,6 +27,7 @@ class ConfigureConsole extends React.Component {
 					<br/><br/>
 					<Input ref='password' type='password' label='Submit' placeholder='password'
 						buttonAfter={<Button bsStyle='primary' onClick={this.onUpdateUser.bind(this)}>Update</Button>}/>
+					<GnAlert ref='alert'/>
 				</Col>
 			</Row>
 		);
@@ -40,6 +41,12 @@ class ConfigureConsole extends React.Component {
 		this.setState({[fieldName]: e.target.value});
 	}
 	onUpdateUser() {
+		function onSuccess (argument) {
+			// body...
+		}
+		function on (argument) {
+			// body...
+		}
 		Relay.Store.update(new UpdateUserMutation({
 			password: this.refs.password.refs.input.value,
 			user: this.props.app.user,
@@ -47,7 +54,16 @@ class ConfigureConsole extends React.Component {
 			categories: this.refs.category.getTags(),
 			labels: this.refs.label.getTags(),
 			projectTypes: this.refs.types.getTags()
-		}));
+		}), {
+			onFailure: this.onMutationFailure.bind(this),
+			onSuccess: this.onMutationSuccess.bind(this)
+		});
+	}
+	onMutationSuccess(response) {
+		this.refs.alert.show('Success', true);
+	}
+	onMutationFailure(error) {
+		this.refs.alert.show('Update failed!', false);
 	}
 }
 
