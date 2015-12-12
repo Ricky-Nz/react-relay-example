@@ -65,6 +65,10 @@ class BuildingEditor extends React.Component {
 								onChange={this.onInputChanged.bind(this, 'location')}/>
 						</Col>
 						<Col xs={6} md={4}>
+							<Input type='text' placeholder='index' label='Index' value={this.state.index}
+								onChange={this.onInputChanged.bind(this, 'index')}/>
+						</Col>
+						<Col xs={6} md={4}>
 							<Input type='select' label='Project Type' value={this.state.type}
 								placeholder='select type' onChange={this.onInputChanged.bind(this, 'type')}>
 								{projectTypeViews}
