@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
 import { Input, Row, Col, Label, Button, ButtonGroup } from 'react-bootstrap';
-import { GnImageInput } from './elements';
+import { ImageInput } from './elements';
 
-class BuildingSegment extends React.Component {
+class SegmentItem extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = this.onPropsChange(props);
@@ -25,7 +25,7 @@ class BuildingSegment extends React.Component {
 					<p>
 						<Label>{this.props.index + 1}</Label>
 					</p>
-					<ButtonGroup>
+					<ButtonGroup bsSize='small'>
 						<Button bsSize='small' onClick={() => this.props.onInsert(this.props.index)}>Insert</Button>
 						<Button bsSize='small' bsStyle='danger' onClick={() => this.props.onDelete(this.props.index)}>Delete</Button>
 					</ButtonGroup>
@@ -47,7 +47,7 @@ class BuildingSegment extends React.Component {
 				</Row>
 				<Input type='textarea' placeholder='content' label='Content'
 					value={this.state.content} onChange={this.onInputChange.bind(this, 'content')}/>
-				<GnImageInput ref='images' label='Images' multiple={true} imageUrl={this.props.segment.images}/>
+				<ImageInput ref='images' label='Images' multiple={true} imageUrl={this.props.segment.images}/>
 			</div>
 		);
 	}
@@ -67,14 +67,14 @@ class BuildingSegment extends React.Component {
 	}
 }
 
-BuildingSegment.propTypes = {
+SegmentItem.propTypes = {
 	index: PropTypes.number,
 	segment: PropTypes.object.isRequired,
 	onDelete: PropTypes.func,
 	onInsert: PropTypes.func
 };
 
-export default BuildingSegment;
+export default SegmentItem;
 
 
 

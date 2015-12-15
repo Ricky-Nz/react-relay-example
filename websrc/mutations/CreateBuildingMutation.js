@@ -2,8 +2,8 @@ import Relay from 'react-relay';
 
 export default class CreateBuildingMutation extends Relay.Mutation {
 	static fragments = {
-		user: () => Relay.QL`
-			fragment on User {
+		app: () => Relay.QL`
+			fragment on App {
 				id
 			}
 		`
@@ -15,7 +15,7 @@ export default class CreateBuildingMutation extends Relay.Mutation {
 		return Relay.QL`
 			fragment on CreateBuildingPayload {
 				buildingEdge,
-				user {
+				app {
 					buildings
 				}
 			}
@@ -24,8 +24,8 @@ export default class CreateBuildingMutation extends Relay.Mutation {
 	getConfigs() {
 		return [{
 			type: 'RANGE_ADD',
-			parentName: 'user',
-			parentID: this.props.user.id,
+			parentName: 'app',
+			parentID: this.props.app.id,
 			connectionName: 'buildings',
 			edgeName: 'buildingEdge',
 			rangeBehaviors: {
@@ -35,18 +35,17 @@ export default class CreateBuildingMutation extends Relay.Mutation {
 	}
 	getVariables() {
 		return {
-			userId: this.props.user.id,
 			password: this.props.password,
 			name: this.props.name,
 			index: this.props.index,
 			order: this.props.order,
 			category: this.props.category,
-			label: this.props.label,
 			promote: this.props.promote,
 			location: this.props.location,
 			type: this.props.type,
 			area: this.props.area,
 			status: this.props.status,
+			labels: this.props.labels,
 			segments: this.props.segments
 		};
 	}

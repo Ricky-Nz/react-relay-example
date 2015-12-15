@@ -26,9 +26,15 @@ module.exports = {
 	devtool: 'source-map',
 	devServer: {
 		contentBase: path.join(__dirname, 'dist'),
+		host: 'localhost',
 		port: 8080,
+		historyApiFallback: true,
 		proxy: {
 			'/api/graphql': {
+				target: 'http://localhost:3000',
+				secure: false
+			},
+			'/uploads/*': {
 				target: 'http://localhost:3000',
 				secure: false
 			}

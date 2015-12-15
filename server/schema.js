@@ -23,18 +23,16 @@ import {
 } from 'graphql-relay';
 
 import {
-	DBUser,
 	DBBuilding,
-	findBuildingById,
-	findUserById,
-	findBuildingsByUser,
-	findPromoteBuildingsByUser,
-	findUserByName,
-	createUser,
-	updateUser,
 	createBuilding,
 	updateBuilding,
-	removeBuilding
+	removeBuilding,
+	findBuildingById,
+	findBuildings,
+	findPromoteBuildings,
+	initApp,
+	getApp,
+	updateApp
 } from './database';
 
 import fs from 'fs';
@@ -44,30 +42,6 @@ import _ from 'underscore';
 function confirmPassword(password) {
 	return fs.readFileSync(path.join(__dirname, 'password.json'), 'utf-8') === password;
 }
-
-var {nodeInterface, nodeField} = nodeDefinitions(
-	(globalId) => {
-		const {type, id} = fromGlobalId(globalId);
-		if (type === 'User') {
-			return findUserById(id)
-				.then(user => user);
-		} else if (type === 'Building') {
-			return findBuildingById(id)
-				.then(building => building);
-		} else {
-			return null;
-		}
-	},
-	(obj) => {
-		if (obj instanceof DBUser) {
-			return GraphQLUser;
-		} else if (obj instanceof DBBuilding) {
-			return GraphQLBuilding;
-		} else {
-			return null;
-		}
-	}
-);
 
 var GraphQLSegment = new GraphQLObjectType({
 	name: 'Segment',
@@ -109,9 +83,12 @@ var GraphQLSegmentInput = new GraphQLInputObjectType({
 
 var GraphQLBuilding = new GraphQLObjectType({
 	name: 'Building',
-	description: 'User buildings',
+	description: 'buildings',
 	fields: () => ({
-		id: globalIdField('Building', (obj) => obj._id),
+		id: {
+			type: GraphQLID,
+			resolve: (obj) => obj._id
+		},
 		name: {
 			type: GraphQLString
 		},
@@ -122,9 +99,6 @@ var GraphQLBuilding = new GraphQLObjectType({
 			type: GraphQLString
 		},
 		category: {
-			type: GraphQLString
-		},
-		label: {
 			type: GraphQLString
 		},
 		promote: {
@@ -148,11 +122,13 @@ var GraphQLBuilding = new GraphQLObjectType({
 		thumbnail: {
 			type: GraphQLString
 		},
+		labels: {
+			type: new GraphQLList(GraphQLString)
+		},
 		segments: {
 			type: new GraphQLList(GraphQLSegment)
 		}
-	}),
-	interfaces: [nodeInterface]
+	})
 });
 
 var {
@@ -163,14 +139,11 @@ var {
 	nodeType: GraphQLBuilding
 });
 
-var GraphQLUser = new GraphQLObjectType({
-	name: 'User',
-	description: 'User object',
+var GraphQLApp = new GraphQLObjectType({
+	name: 'App',
+	description: 'Root object',
 	fields: () => ({
-		id: globalIdField('User', (obj) => obj._id),
-		name: {
-			type: GraphQLString
-		},
+		id: globalIdField('App', () => 'APPLICATION'),
 		bannerCount: {
 			type: GraphQLInt
 		},
@@ -191,41 +164,16 @@ var GraphQLUser = new GraphQLObjectType({
 				},
 				...connectionArgs
 			},
-			resolve: (user, {labels, ...args}) =>
-				findBuildingsByUser(user._id, labels)
+			resolve: (app, {labels, ...args}) =>
+				findBuildings(labels)
 					.then(buildings => connectionFromArray(buildings, args))
 		},
 		promotes: {
 			type: BuildingsConnection,
 			args: connectionArgs,
-			resolve: (user, args) => {
-				return findPromoteBuildingsByUser(user._id)
-					.then(buildings => connectionFromArray(buildings, args));
-			}
-		}
-	}),
-	interfaces: [nodeInterface]
-});
-
-var GraphQLApp = new GraphQLObjectType({
-	name: 'App',
-	description: 'Root object',
-	fields: () => ({
-		user: {
-			type: GraphQLUser,
-			args: {
-				name: {
-					type: GraphQLString
-				}
-			},
-			resolve: (app, {name}) =>
-				findUserByName(name||'ruiqi').then(user => {
-					if (!user) {
-						return createUser('ruiqi').then(user => user);
-					} else {
-						return user;
-					}
-				})
+			resolve: (app, args) =>
+				findPromoteBuildings()
+					.then(buildings => connectionFromArray(buildings, args))
 		},
 		building: {
 			type: GraphQLBuilding,
@@ -234,32 +182,33 @@ var GraphQLApp = new GraphQLObjectType({
 					type: new GraphQLNonNull(GraphQLID)
 				}
 			},
-			resolve: (root, {id}) => {
-				const {type, id: localId} = fromGlobalId(id);
-				return findBuildingById(localId).then(building => building);
-			}
+			resolve: (app, {id}) =>
+				findBuildingById(id).then(building => building)
 		}
 	})
 });
 
-var queryType = new GraphQLObjectType({
+var GraphQLQueryRoot = new GraphQLObjectType({
 	name: 'Query',
 	fields: () => ({
 		app: {
 			type: GraphQLApp,
-			resolve: (root) => ({})
+			resolve: (root) => getApp().then(app => {
+					if (app) {
+						return app;
+					} else {
+						return initApp().then(app => app);
+					}
+			})
 		}
 	})
 });
 
-var updateUserMutation = mutationWithClientMutationId({
-	name: 'UpdateUser',
-	description: 'update user configuration',
+var updateAppMutation = mutationWithClientMutationId({
+	name: 'UpdateApp',
+	description: 'update app configuration',
 	inputFields: {
 		password: {
-			type: new GraphQLNonNull(GraphQLString)
-		},
-		name: {
 			type: new GraphQLNonNull(GraphQLString)
 		},
 		bannerCount: {
@@ -276,15 +225,14 @@ var updateUserMutation = mutationWithClientMutationId({
 		}
 	},
 	outputFields: {
-		user: {
-			type: GraphQLUser,
-			resolve: ({userId}) =>
-				findUserById(userId).then(user => user)
+		app: {
+			type: GraphQLApp,
+			resolve: (app) => app
 		}
 	},
 	mutateAndGetPayload: ({password, ...args}) => {
 		if (confirmPassword(password)) {
-			return updateUser(args).then(user => ({userId: user._id}));
+			return updateApp(args).then(app => app);
 		} else {
 			return null;
 		}
@@ -297,9 +245,6 @@ var createBuildingMutation = mutationWithClientMutationId({
 		password: {
 			type: new GraphQLNonNull(GraphQLString)
 		},
-		userId: {
-			type: new GraphQLNonNull(GraphQLID)
-		},
 		name: {
 			type: new GraphQLNonNull(GraphQLString)
 		},
@@ -310,9 +255,6 @@ var createBuildingMutation = mutationWithClientMutationId({
 			type: GraphQLString
 		},
 		category: {
-			type: GraphQLString
-		},
-		label: {
 			type: GraphQLString
 		},
 		promote: {
@@ -330,6 +272,9 @@ var createBuildingMutation = mutationWithClientMutationId({
 		status: {
 			type: GraphQLString
 		},
+		labels: {
+			type: new GraphQLList(GraphQLString)
+		},
 		segments: {
 			type: new GraphQLList(GraphQLSegmentInput)
 		}
@@ -337,9 +282,8 @@ var createBuildingMutation = mutationWithClientMutationId({
 	outputFields: {
 		buildingEdge: {
 			type: GraphQLBuildingEdge,
-			resolve: ({buildingId, userId}) =>
-				findBuildingsByUser(userId)
-					.then(buildings => {
+			resolve: ({buildingId}) =>
+				findBuildings().then(buildings => {
 						const newBuiding = _.find(buildings, building => building._id.toString() === buildingId.toString());
 						return {
 							cursor: cursorForObjectInConnection(buildings, newBuiding),
@@ -347,22 +291,15 @@ var createBuildingMutation = mutationWithClientMutationId({
 						};
 					})
 		},
-		user: {
-			type: GraphQLUser,
-			resolve: ({buildingId, userId}) => {
-				return findUserById(userId)
-					.then(user => user);
-			}
+		app: {
+			type: GraphQLApp,
+			resolve: () => getApp()
 		}
 	},
-	mutateAndGetPayload: ({userId, password, ...fields}, {rootValue}) => {
+	mutateAndGetPayload: ({password, ...fields}, {rootValue}) => {
 		if (confirmPassword(password)) {
-			const {type, id} = fromGlobalId(userId);
-			return createBuilding({userId: id, ...fields}, rootValue.request.files)
-				.then(building => ({
-					buildingId: building._id,
-					userId: id
-				}));
+			return createBuilding(fields, rootValue.request.files)
+				.then(building => ({buildingId: building._id}));
 		} else {
 			return null;
 		}
@@ -379,15 +316,12 @@ var updateBuildingMutation = mutationWithClientMutationId({
 			type: new GraphQLNonNull(GraphQLID)
 		},
 		name: {
-			type: new GraphQLNonNull(GraphQLString)
+			type: GraphQLString
 		},
 		order: {
 			type: GraphQLString
 		},
 		category: {
-			type: GraphQLString
-		},
-		label: {
 			type: GraphQLString
 		},
 		index: {
@@ -408,6 +342,15 @@ var updateBuildingMutation = mutationWithClientMutationId({
 		status: {
 			type: GraphQLString
 		},
+		banner: {
+			type: GraphQLString
+		},
+		thumbnail: {
+			type: GraphQLString
+		},
+		labels: {
+			type: new GraphQLList(GraphQLString)
+		},
 		segments: {
 			type: new GraphQLList(GraphQLSegmentInput)
 		}
@@ -419,10 +362,9 @@ var updateBuildingMutation = mutationWithClientMutationId({
 				.then(building => building)
 		}
 	},
-	mutateAndGetPayload: ({id, password, ...fields}, {rootValue}) => {
+	mutateAndGetPayload: ({password, ...fields}, {rootValue}) => {
 		if (confirmPassword(password)) {
-			const {type, id: buildingId} = fromGlobalId(id);
-			return updateBuilding({id: buildingId, ...fields}, rootValue.request.files)
+			return updateBuilding(fields, rootValue.request.files)
 				.then(building => building._id);
 		} else {
 			return null;
@@ -443,32 +385,27 @@ var removeBuildingMutation = mutationWithClientMutationId({
 	outputFields: {
 		deletedBuildingId: {
 			type: GraphQLString,
-			resolve: ({buildingId, userId}) => buildingId
+			resolve: ({buildingId}) => buildingId
 		},
-		user: {
-			type: GraphQLUser,
-			resolve: ({buildingId, userId}) => findUserById(userId)
-				.then(user => user)
+		app: {
+			type: GraphQLApp,
+			resolve: ({buildingId}) => getApp().then(app => app)
 		}
 	},
 	mutateAndGetPayload: ({id, password}) => {
 		if (confirmPassword(password)) {
-			const {type, id: localId} = fromGlobalId(id);
-			return removeBuilding(localId)
-				.then(removedBuilding => ({
-					buildingId: id,
-					userId: removedBuilding.userId
-				}));
+			return removeBuilding(id)
+				.then(removedBuilding => ({buildingId: id}));
 		} else {
 			return null;
 		}
 	}
 })
 
-var mutationType = new GraphQLObjectType({
+var GraphQLMutationRoot = new GraphQLObjectType({
 	name: 'Mutation',
 	fields: () => ({
-		updateUser: updateUserMutation,
+		updateApp: updateAppMutation,
 		createBuilding: createBuildingMutation,
 		updateBuilding: updateBuildingMutation,
 		removeBuilding: removeBuildingMutation
@@ -476,8 +413,8 @@ var mutationType = new GraphQLObjectType({
 });
 
 export var schema = new GraphQLSchema({
-	query: queryType,
-	mutation: mutationType
+	query: GraphQLQueryRoot,
+	mutation: GraphQLMutationRoot
 });
 
 

@@ -46,12 +46,10 @@ export default Relay.createContainer(ProjectPage, {
 					banner,
 					${ProjectSegments.getFragment('building')}
 				},
-				user {
-					buildings(first: 1000) {
-						edges {
-							node {
-								id
-							}
+				buildings(first: 1000) {
+					edges {
+						node {
+							id
 						}
 					}
 				}

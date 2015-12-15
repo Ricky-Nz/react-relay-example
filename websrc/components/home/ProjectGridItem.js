@@ -3,7 +3,7 @@ import Relay from 'react-relay';
 import { ListGroupItem } from 'react-bootstrap';
 import { Link } from 'react-router';
 
-class BuildingGridItem extends React.Component {
+class ProjectGridItem extends React.Component {
 	render() {
 		const {building, ...otherProps} = this.props;
 		const itemStyle = {
@@ -73,7 +73,7 @@ class BuildingGridItem extends React.Component {
 	}
 }
 
-export default Relay.createContainer(BuildingGridItem, {
+export default Relay.createContainer(ProjectGridItem, {
 	fragments: {
 		building: () => Relay.QL`
 			fragment on Building {

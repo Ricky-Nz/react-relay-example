@@ -1,17 +1,17 @@
-import GnTags from './GnTags';
-import GnImageInput from './GnImageInput';
+import LabelEditor from './LabelEditor';
+import LabelSelector from './LabelSelector';
+import ImageInput from './ImageInput';
 import GnImageCarousel from './GnImageCarousel';
 import GnNavbar from './GnNavbar';
-import GnSelectableTags from './GnSelectableTags';
 import GnParallaxImage from './GnParallaxImage';
 import GnAlert from './GnAlert';
 
 export {
 	GnAlert,
-	GnTags,
-	GnImageInput,
+	LabelEditor,
+	LabelSelector,
+	ImageInput,
 	GnImageCarousel,
-	GnSelectableTags,
 	GnNavbar,
 	GnParallaxImage
 };

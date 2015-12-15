@@ -1,15 +1,20 @@
 type App {
-  user(name: String): User
+  id: ID!
+  bannerCount: Int
+  categories: [String]
+  labels: [String]
+  projectTypes: [String]
+  buildings(labels: [String], after: String, first: Int, before: String, last: Int): BuildingConnection
+  promotes(after: String, first: Int, before: String, last: Int): BuildingConnection
   building(id: ID!): Building
 }
 
-type Building implements Node {
-  id: ID!
+type Building {
+  id: ID
   name: String
   index: String
   order: String
   category: String
-  label: String
   promote: String
   location: String
   type: String
@@ -17,6 +22,7 @@ type Building implements Node {
   status: String
   banner: String
   thumbnail: String
+  labels: [String]
   segments: [Segment]
 }
 
@@ -32,36 +38,31 @@ type BuildingEdge {
 
 input CreateBuildingInput {
   password: String!
-  userId: ID!
   name: String!
   index: String
   order: String
   category: String
-  label: String
   promote: String
   location: String
   type: String
   area: String
   status: String
+  labels: [String]
   segments: [SegmentInput]
   clientMutationId: String!
 }
 
 type CreateBuildingPayload {
   buildingEdge: BuildingEdge
-  user: User
+  app: App
   clientMutationId: String!
 }
 
 type Mutation {
-  updateUser(input: UpdateUserInput!): UpdateUserPayload
+  updateApp(input: UpdateAppInput!): UpdateAppPayload
   createBuilding(input: CreateBuildingInput!): CreateBuildingPayload
   updateBuilding(input: UpdateBuildingInput!): UpdateBuildingPayload
   removeBuilding(input: RemoveBuildingInput!): RemoveBuildingPayload
-}
-
-interface Node {
-  id: ID!
 }
 
 type PageInfo {
@@ -83,7 +84,7 @@ input RemoveBuildingInput {
 
 type RemoveBuildingPayload {
   deletedBuildingId: String
-  user: User
+  app: App
   clientMutationId: String!
 }
 
@@ -101,19 +102,35 @@ input SegmentInput {
   mode: String
 }
 
+input UpdateAppInput {
+  password: String!
+  bannerCount: Int
+  categories: [String]
+  labels: [String]
+  projectTypes: [String]
+  clientMutationId: String!
+}
+
+type UpdateAppPayload {
+  app: App
+  clientMutationId: String!
+}
+
 input UpdateBuildingInput {
   password: String!
   id: ID!
-  name: String!
+  name: String
   order: String
   category: String
-  label: String
   index: String
   promote: String
   location: String
   type: String
   area: String
   status: String
+  banner: String
+  thumbnail: String
+  labels: [String]
   segments: [SegmentInput]
   clientMutationId: String!
 }
@@ -121,30 +138,4 @@ input UpdateBuildingInput {
 type UpdateBuildingPayload {
   building: Building
   clientMutationId: String!
-}
-
-input UpdateUserInput {
-  password: String!
-  name: String!
-  bannerCount: Int
-  categories: [String]
-  labels: [String]
-  projectTypes: [String]
-  clientMutationId: String!
-}
-
-type UpdateUserPayload {
-  user: User
-  clientMutationId: String!
-}
-
-type User implements Node {
-  id: ID!
-  name: String
-  bannerCount: Int
-  categories: [String]
-  labels: [String]
-  projectTypes: [String]
-  buildings(labels: [String], after: String, first: Int, before: String, last: Int): BuildingConnection
-  promotes(after: String, first: Int, before: String, last: Int): BuildingConnection
 }

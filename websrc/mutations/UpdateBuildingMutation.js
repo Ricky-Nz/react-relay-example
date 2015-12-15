@@ -20,12 +20,14 @@ export default class UpdateBuildingMutation extends Relay.Mutation {
 					index,
 					order,
 					category,
-					label,
 					promote,
 					location,
 					type,
 					area,
 					status,
+					banner,
+					thumbnail,
+					labels,
 					segments
 				}
 			}
@@ -47,12 +49,14 @@ export default class UpdateBuildingMutation extends Relay.Mutation {
 			index: this.props.index,
 			order: this.props.order,
 			category: this.props.category,
-			label: this.props.label,
 			promote: this.props.promote,
 			location: this.props.location,
 			type: this.props.type,
 			area: this.props.area,
 			status: this.props.status,
+			thumbnail: this.props.thumbnail,
+			banner: this.props.banner,
+			labels: this.props.labels,
 			segments: this.props.segments
 		};
 	}

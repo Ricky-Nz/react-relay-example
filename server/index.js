@@ -21,7 +21,10 @@ graphQLServer.use('/api', graphQLHTTP(req => ({
 	rootValue: { request: req }
 })));
 graphQLServer.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
-graphQLServer.use('/', express.static(path.join(__dirname, '..', 'dist')));
+graphQLServer.use(express.static(path.join(__dirname, '..', 'dist')));
+graphQLServer.get('*', function (request, response){
+	response.sendFile(path.join(__dirname, '..', 'dist', 'index.html'));
+});
 
 graphQLServer.listen(PORT, () =>
 	console.log(`GraphQL Server now running on: ${PORT}`));

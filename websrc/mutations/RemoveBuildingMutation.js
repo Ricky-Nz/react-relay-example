@@ -7,8 +7,8 @@ export default class RemoveBuildingMutation extends Relay.Mutation {
 				id
 			}
 		`,
-		user: () => Relay.QL`
-			fragment on User {
+		app: () => Relay.QL`
+			fragment on App {
 				id
 			}
 		`
@@ -20,7 +20,7 @@ export default class RemoveBuildingMutation extends Relay.Mutation {
 		return Relay.QL`
 			fragment on RemoveBuildingPayload {
 				deletedBuildingId,
-				user {
+				app {
 					id
 				}
 			}
@@ -29,8 +29,8 @@ export default class RemoveBuildingMutation extends Relay.Mutation {
 	getConfigs() {
 		return [{
 			type: 'NODE_DELETE',
-			parentName: 'user',
-			parentID: this.props.user.id,
+			parentName: 'app',
+			parentID: this.props.app.id,
 			connectionName: 'buildings',
 			deletedIDFieldName: 'deletedBuildingId'
 		}];

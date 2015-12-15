@@ -2,13 +2,13 @@ import React, { PropTypes } from 'react';
 import { Image, Input, Button } from 'react-bootstrap';
 import _ from 'underscore';
 
-class GnImageInput extends React.Component {
+class ImageInput extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = this.onPropChanged(props);
 	}
 	componentWillReceiveProps(nextProps) {
-		if (nextProps.imageUrl != this.props.imageUrl) {
+		if (nextProps.imageUrl !== this.props.imageUrl) {
 			this.setState(this.onPropChanged(nextProps));
 		}
 	}
@@ -27,13 +27,9 @@ class GnImageInput extends React.Component {
 			right: 4,
 			top: 4
 		};
-		const previewContent = {
-			display: 'flex',
-			flexDirection: 'row',
-			flexWrap: 'wrap'
-		};
+
 		const imagePreviews = this.state.images.map((image, index) => {
-			const preview = (typeof image === 'string' ? image : URL.createObjectURL(image));
+			const preview = (typeof image === 'string' ? `/${image}` : URL.createObjectURL(image));
 			return (
 				<div key={index} style={imageContent} >
 					<Image style={imageStyle} src={preview} responsive thumbnail/>
@@ -46,7 +42,9 @@ class GnImageInput extends React.Component {
 		return (
 			<div>
 				<Input type='file' label={label} multiple={multiple} onChange={this.onFileSelect.bind(this)}/>
-				<div style={previewContent}>{imagePreviews}</div>
+				<div style={{display: 'flex',flexDirection: 'row',flexWrap: 'wrap'}}>
+					{imagePreviews}
+				</div>
 			</div>
 		);
 	}
@@ -60,15 +58,17 @@ class GnImageInput extends React.Component {
 		}
 	}
 	onFileSelect(e) {
-		this.setState({ images: this.props.multiple ?
-			[...this.state.images, ...e.target.files] : [e.target.files[0]] });
+		if (e.target.files) {
+			this.setState({ images: this.props.multiple ?
+				[...this.state.images, ...e.target.files] : [e.target.files[0]] });
+		}
 	}
 	getImages() {
-		return this.props.multiple ? this.state.images : this.state.images[0];
+		return this.props.multiple ? this.state.images : (this.state.images[0]||null);
 	}
 }
 
-GnImageInput.propTypes = {
+ImageInput.propTypes = {
 	multiple: PropTypes.bool,
 	label: PropTypes.string,
 	previewHeight: PropTypes.number,
@@ -79,12 +79,12 @@ GnImageInput.propTypes = {
 	])
 };
 
-GnImageInput.defaultProps = {
+ImageInput.defaultProps = {
 	multiple: false,
 	previewWidth: 150,
 	previewHeight: 150
 };
 
-export default GnImageInput;
+export default ImageInput;
 
 
