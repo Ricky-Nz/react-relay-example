@@ -1,12 +1,12 @@
 import React, { PropTypes } from 'react';
 import Relay from 'react-relay';
 import { ListGroup, ListGroupItem, Glyphicon } from 'react-bootstrap';
-import DashboardProjectListItem from './DashboardProjectListItem';
+import ProjectListItem from './ProjectListItem';
 
-class DashboardProjectList extends React.Component {
+class ProjectList extends React.Component {
 	render() {
 		const buildingItems = this.props.app.buildings.edges.map(({node}, index) =>
-			<DashboardProjectListItem key={index} select={this.props.select} building={node}/>);
+			<ProjectListItem key={index} select={this.props.select} building={node}/>);
 
 		return (
 			<div>
@@ -24,18 +24,18 @@ class DashboardProjectList extends React.Component {
 	}
 }
 
-DashboardProjectList.propTypes = {
+ProjectList.propTypes = {
 	select: PropTypes.string
 };
 
-export default Relay.createContainer(DashboardProjectList, {
+export default Relay.createContainer(ProjectList, {
 	fragments: {
 		app: () => Relay.QL`
 			fragment on App {
 				buildings(first: 1000) {
 					edges {
 						node {
-							${DashboardProjectListItem.getFragment('building')}
+							${ProjectListItem.getFragment('building')}
 						}
 					}
 				}

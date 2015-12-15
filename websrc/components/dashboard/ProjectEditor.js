@@ -1,8 +1,8 @@
 import React from 'react';
 import Relay from 'react-relay';
 import { Input, Button, Row, Col } from 'react-bootstrap';
-import { GnAlert } from './elements';
-import { CreateBuildingMutation, UpdateBuildingMutation, RemoveBuildingMutation } from '../mutations';
+import { GnAlert } from '../';
+import { CreateBuildingMutation, UpdateBuildingMutation, RemoveBuildingMutation } from '../../mutations';
 import ProjectBasicPanel from './ProjectBasicPanel';
 import ProjectSegmentsPanel from './ProjectSegmentsPanel';
 

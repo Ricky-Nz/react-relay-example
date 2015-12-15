@@ -1,7 +1,7 @@
 import React from 'react';
 import Relay from 'react-relay';
 import { Row, Col, Button, Input } from 'react-bootstrap';
-import { LabelEditor, GnAlert } from './elements';
+import { LabelEditor, GnAlert } from '../';
 import { UpdateAppMutation } from '../../mutations';
 
 class DashboardConfigTab extends React.Component {

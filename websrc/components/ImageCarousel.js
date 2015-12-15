@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Carousel, CarouselItem } from 'react-bootstrap';
 
-class GnImageCarousel extends React.Component {
+class ImageCarousel extends React.Component {
 	render() {
 		const { imageUrls, width, height, ...carouselProps } = this.props;
 		const carouselItems = imageUrls.map((imageUrl, index) => {
@@ -29,20 +29,19 @@ class GnImageCarousel extends React.Component {
 	}
 }
 
-GnImageCarousel.propTypes = {
+ImageCarousel.propTypes = {
 	width: PropTypes.number,
 	height: PropTypes.number,
 	imageUrls: PropTypes.arrayOf(PropTypes.string).isRequired,
 	interval: PropTypes.number,
-	defaultActiveIndex: PropTypes.number,
 	indicators: PropTypes.bool,
 	onItemSelect: PropTypes.func
 };
 
-GnImageCarousel.defaultProps = {
+ImageCarousel.defaultProps = {
 	interval: 600000,
-	defaultActiveIndex: 0,
 	indicators: false
 };
 
-export default GnImageCarousel;
+export default ImageCarousel;
+

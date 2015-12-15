@@ -1,6 +1,6 @@
 import React from 'react';
 import Relay from 'react-relay';
-import { GnNavbar } from './elements';
+import { TitleBar } from '../';
 
 class Dashboard extends React.Component {
 	render() {
@@ -14,7 +14,7 @@ class Dashboard extends React.Component {
 
 		return (
 			<div style={contentStyle}>
-				<GnNavbar title='Arc Studio Dashboard' items={navItems} fixedTop/>
+				<TitleBar title='Arc Studio Dashboard' navItems={navItems} fixedTop/>
 				{this.props.children}
 				<br/><br/><br/><br/><br/><br/>
 			</div>

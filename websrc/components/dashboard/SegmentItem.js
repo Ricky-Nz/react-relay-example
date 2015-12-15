@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Input, Row, Col, Label, Button, ButtonGroup } from 'react-bootstrap';
-import { ImageInput } from './elements';
+import { ImageInput } from '../';
 
 class SegmentItem extends React.Component {
 	constructor(props) {

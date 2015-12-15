@@ -1,9 +1,9 @@
 import LabelEditor from './LabelEditor';
 import LabelSelector from './LabelSelector';
 import ImageInput from './ImageInput';
-import GnImageCarousel from './GnImageCarousel';
-import GnNavbar from './GnNavbar';
-import GnParallaxImage from './GnParallaxImage';
+import ImageCarousel from './ImageCarousel';
+import TitleBar from './TitleBar';
+import ParallaxBanner from './ParallaxBanner';
 import GnAlert from './GnAlert';
 
 export {
@@ -11,7 +11,7 @@ export {
 	LabelEditor,
 	LabelSelector,
 	ImageInput,
-	GnImageCarousel,
-	GnNavbar,
-	GnParallaxImage
+	ImageCarousel,
+	TitleBar,
+	ParallaxBanner
 };

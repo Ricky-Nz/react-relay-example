@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import Relay from 'react-relay';
-import { GnImageCarousel, GnParallaxImage } from './elements';
+import { GnImageCarousel, GnParallaxImage } from '../';
 
 class SegmentImages extends React.Component {
 	render() {

@@ -1,9 +1,10 @@
 import React, { PropTypes } from 'react';
 import Relay from 'react-relay';
-import { GnImageCarousel } from './elements';
+import { ImageCarousel } from '../';
 
 class HomeBanner extends React.Component {
 	render() {
+		const { promotes } = this.props.app;
 		const topItem = {
 			marginTop: 50,
 			zIndex: 3,
@@ -11,12 +12,11 @@ class HomeBanner extends React.Component {
 			MozBoxShadow: 'inset 0px 0px 35px 0px rgba(10,10,0,0.5)',
 			boxShadow: 'inset 0px 0px 35px 0px rgba(10,10,0,0.5)'
 		};
-		const banners = this.props.app.promotes
-			&&this.props.app.promotes.edges.map(edge => edge.node.banner);
+		const bannerImages = promotes&&promotes.edges.map(({node}) => node.banner);
 
 		return (
-			<GnImageCarousel style={topItem} height={400}
-				imageUrls={banners} interval={4000} indicators
+			<ImageCarousel style={topItem} height={400}
+				imageUrls={bannerImages} interval={4000} indicators
 				onItemSelect={this.onItemClick.bind(this)}/>
 		);
 	}

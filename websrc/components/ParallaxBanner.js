@@ -1,8 +1,9 @@
 import React, { PropTypes } from 'react';
 import sparkScroll from 'react-spark-scroll-rekapi';
-const {SparkScroll, SparkProxy} = sparkScroll({invalidateAutomatically: true});
 
-class GnParallaxImage extends React.Component {
+const { SparkScroll, SparkProxy } = sparkScroll({invalidateAutomatically: true});
+
+class ParallaxBanner extends React.Component {
 	render() {
 		const parallaxCont = Object.assign({
 			position: 'relative',
@@ -45,9 +46,10 @@ class GnParallaxImage extends React.Component {
 	}
 }
 
-GnParallaxImage.propTypes = {
+ParallaxBanner.propTypes = {
 	imageUrl: PropTypes.string.isRequired,
 	height: PropTypes.number
 };
 
-export default GnParallaxImage;
+export default ParallaxBanner;
+

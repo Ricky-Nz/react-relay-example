@@ -1,7 +1,7 @@
 import React from 'react';
 import Relay from 'react-relay';
 import { Row, Col } from 'react-bootstrap';
-import DashboardProjectList from './DashboardProjectList'
+import ProjectList from './ProjectList'
 import ProjectEditor from './ProjectEditor';
 
 class DashboardProject extends React.Component {
@@ -9,7 +9,7 @@ class DashboardProject extends React.Component {
 		return (
 			<Row>
 				<Col xs={3} xsOffset={1}>
-					<DashboardProjectList app={this.props.app} select={this.props.location.query.select}/>
+					<ProjectList app={this.props.app} select={this.props.location.query.select}/>
 				</Col>
 				<Col xs={7}>
 					<ProjectEditor app={this.props.app} building={this.props.app.building||null}/>
@@ -27,7 +27,7 @@ export default Relay.createContainer(DashboardProject, {
 	fragments: {
 		app: () => Relay.QL`
 			fragment on App {
-				${DashboardProjectList.getFragment('app')},
+				${ProjectList.getFragment('app')},
 				${ProjectEditor.getFragment('app')},
 				building(id: $select) @include(if: $fetchBuilding) {
 					${ProjectEditor.getFragment('building')}

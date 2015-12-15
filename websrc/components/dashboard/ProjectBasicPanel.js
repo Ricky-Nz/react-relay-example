@@ -1,7 +1,7 @@
 import React from 'react';
 import Relay from 'react-relay';
 import { Row, Col, Input, Panel } from 'react-bootstrap';
-import { LabelSelector, ImageInput } from './elements';
+import { LabelSelector, ImageInput } from '../';
 
 class ProjectBasicEditor extends React.Component {
 	constructor(props) {
