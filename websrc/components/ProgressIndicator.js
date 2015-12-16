@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Alert } from 'react-bootstrap';
 
-class GnAlert extends React.Component {
+class ProgressIndicator extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = { show: false };
@@ -40,4 +40,4 @@ class GnAlert extends React.Component {
 	}
 }
 
-export default GnAlert;
+export default ProgressIndicator;

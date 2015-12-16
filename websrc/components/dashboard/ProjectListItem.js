@@ -7,7 +7,7 @@ class DashboardProjectListItem extends React.Component {
 		const { id, name, order, promote } = this.props.building;
 		return (
 			<ListGroupItem header={name} active={id===this.props.select}
-				href={`?select=${id}`}>
+				href={`/console/project/${id}`}>
 				{`${order&&('Order:'+order)||''} ${promote&&('Banner Slot:'+promote)||''}`}
 			</ListGroupItem>
 		);

@@ -23,7 +23,7 @@ class LabelSelector extends React.Component {
 			<div>
 				<b>{title}</b>
 				<div style={contentStyle}>
-					{showAllLabel&&<Button style={itemStyle} bsSize='xsmall' bsStyle={selectLabels&&selectLabels.length?'info':'default'}
+					{showAllLabel&&<Button style={itemStyle} bsSize='xsmall' bsStyle={selectLabels&&selectLabels.length?'default':'info'}
 						onClick={this.onItemClick.bind(this, null)}>All</Button>}
 					{itemViews}
 				</div>
@@ -36,7 +36,7 @@ class LabelSelector extends React.Component {
 		} else {
 			const currentSelects = this.props.selectLabels;
 			const selectIndex = currentSelects&&currentSelects.indexOf(label);
-			if (selectIndex >= 0) {
+			if (currentSelects&&selectIndex >= 0) {
 				this.props.onSelectChange(
 					[...currentSelects.slice(0, selectIndex), ...currentSelects.slice(selectIndex+1)]);
 			} else if (currentSelects) {

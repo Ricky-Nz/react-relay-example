@@ -12,7 +12,7 @@ class ProjectList extends React.Component {
 			<div>
 				<ListGroup>
 					<ListGroupItem href={'/console/project'}>
-						<div style={{display: 'felx', flexDirection: 'row', justifyContent: 'center'}}>
+						<div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
 							<Glyphicon glyph='plus'/>
 							New
 						</div>

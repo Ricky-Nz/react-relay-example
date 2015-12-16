@@ -88,7 +88,7 @@ class ProjectSegments extends React.Component {
 		segmentItems.unshift(
 			<Col key='start' style={{position:'relative'}} {...bslayout} {...bsOffset}>
 				<ProjectNamecard style={{position:'absolute',top:-79}} building={building}/>
-				<div style={{height:150}}/>
+				<div style={{height:100}}/>
 			</Col>
 		);
 

@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import { IndexRoute, Route } from 'react-router';
 import { RelayRouter } from 'react-router-relay';
 import createBrowserHistory from 'history/lib/createBrowserHistory';
-import useScroll from 'scroll-behavior/lib/useStandardScroll';
+// import useScroll from 'scroll-behavior/lib/useStandardScroll';
 
 import RootQueries from './queries/RootQueries';
 import { HomePage } from './components/home';
@@ -27,19 +27,17 @@ class Root extends React.Component {
 }
 
 ReactDOM.render(
-	<RelayRouter history={useScroll(createBrowserHistory)()}>
+	<RelayRouter history={createBrowserHistory()}>
 		<Route path='/' component={Root}>
 			<IndexRoute component={HomePage} queries={RootQueries}
-				queryParams={['username', 'filter']}/>
+				queryParams={['filter']}/>
 			<Route path='project/:id' component={ProjectPage}
-				queries={RootQueries} queryParams={['username']}/>
-			<Route path='console' component={Dashboard}>
-				<IndexRoute component={DashboardProjectTab}
-					queries={RootQueries} queryParams={['select']}
-					prepareParams={(params, route) => ({...params, fetchBuilding: params.select ? true : false})}/>
+				queries={RootQueries}/>
+			<Route path='console' component={Dashboard}>)}/>
 				<Route path='project' component={DashboardProjectTab}
-					queries={RootQueries} queryParams={['select']}
-					prepareParams={(params, route) => ({...params, fetchBuilding: params.select ? true : false})}/>
+					queries={RootQueries}/>
+				<Route path='project/:id' component={DashboardProjectTab}
+					queries={RootQueries}/>
 				<Route path='configure' component={DashboardConfigTab}
 					queries={RootQueries}/>
 			</Route>

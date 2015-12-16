@@ -5,6 +5,9 @@ import ProjectSegments from './ProjectSegments';
 import ProjectPager from './ProjectPager';
 
 class ProjectPage extends React.Component {
+	componentDidMount() {
+		setTimeout(() => window.scrollTo(0, 0), 10);
+	}
 	render() {
 		const { building, buildings } = this.props.app;
 
@@ -14,7 +17,7 @@ class ProjectPage extends React.Component {
 				<ParallaxBanner style={{marginTop: 50}} height={400} imageUrl={building.banner}/>
 				<ProjectSegments building={building}/>
 				<br/><br/>
-				<ProjectPager app={this.props.app} currentId={this.props.relay.params.id}/>
+				<ProjectPager app={this.props.app} currentId={this.props.params.id}/>
 				<br/><br/>
 				<PageFooter/>
 			</div>

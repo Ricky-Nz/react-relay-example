@@ -1,7 +1,7 @@
 import React from 'react';
 import Relay from 'react-relay';
 import { Row, Col, Button, Input } from 'react-bootstrap';
-import { LabelEditor, GnAlert } from '../';
+import { LabelEditor, ProgressIndicator } from '../';
 import { UpdateAppMutation } from '../../mutations';
 
 class DashboardConfigTab extends React.Component {
@@ -32,7 +32,7 @@ class DashboardConfigTab extends React.Component {
 					<br/><br/>
 					<Input ref='password' type='password' label='Submit' placeholder='password'
 						buttonAfter={<Button bsStyle='primary' onClick={this.onSubmit.bind(this)}>Update</Button>}/>
-					<GnAlert ref='alert'/>
+					<ProgressIndicator ref='alert'/>
 				</Col>
 			</Row>
 		);

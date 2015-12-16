@@ -23,7 +23,7 @@ class ParallaxBanner extends React.Component {
 			boxShadow: 'inset 0px 0px 35px 0px rgba(10,10,0,0.5)'
 		};
 		const parallaxImg = {
-			backgroundImage: `url(${this.props.imageUrl})`,
+			backgroundImage: `url(/${this.props.imageUrl})`,
 			backgroundRepeat: 'no-repeat',
 			backgroundSize: 'cover',
 	  		backgroundPosition: 'center',

@@ -1,17 +1,17 @@
 import React, { PropTypes } from 'react';
 import Relay from 'react-relay';
-import { GnImageCarousel, GnParallaxImage } from '../';
+import { ImageCarousel, ParallaxBanner } from '../';
 
 class SegmentImages extends React.Component {
 	render() {
 		const { segment, height } = this.props;
 		if (segment.mode === 'FILL') {
 			return (
-				<GnParallaxImage imageUrl={segment.images[0]} height={height}/>
+				<ParallaxBanner imageUrl={segment.images[0]} height={height}/>
 			);
 		} else {
 			return (
-				<GnImageCarousel imageUrls={segment.images} height={height}/>
+				<ImageCarousel imageUrls={segment.images} height={height}/>
 			);
 		}
 	}

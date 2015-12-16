@@ -8,6 +8,7 @@ class ProjectGrid extends React.Component {
 		const contentStyle = {
 			display: 'flex',
 			flexDirection: 'row',
+			justifyContent: 'center',
 			flexWrap: 'wrap'
 		};
 		const gridItems = projects&&projects.edges.map(({node}, index) =>

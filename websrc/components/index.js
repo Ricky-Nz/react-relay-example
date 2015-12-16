@@ -4,14 +4,16 @@ import ImageInput from './ImageInput';
 import ImageCarousel from './ImageCarousel';
 import TitleBar from './TitleBar';
 import ParallaxBanner from './ParallaxBanner';
-import GnAlert from './GnAlert';
+import ProgressIndicator from './ProgressIndicator';
+import PageFooter from './PageFooter';
 
 export {
-	GnAlert,
+	ProgressIndicator,
 	LabelEditor,
 	LabelSelector,
 	ImageInput,
 	ImageCarousel,
 	TitleBar,
-	ParallaxBanner
+	ParallaxBanner,
+	PageFooter
 };

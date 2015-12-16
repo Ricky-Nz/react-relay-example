@@ -30,24 +30,26 @@ class SegmentItem extends React.Component {
 						<Button bsSize='small' bsStyle='danger' onClick={() => this.props.onDelete(this.props.index)}>Delete</Button>
 					</ButtonGroup>
 				</div>
-				<Row>
-					<Col xs={10}>
-						<Input type='text' placeholder='title' label='Title'
-							value={this.state.title} onChange={this.onInputChange.bind(this, 'title')}/>
-					</Col>
-					<Col xs={2}>
-						<Input type='select' label='Mode' value={this.state.mode}
-							placeholder='select display mode' onChange={this.onInputChange.bind(this, 'mode')}>
-							<option value='LEFT'>LEFT</option>
-							<option value='RIGHT'>RIGHT</option>
-							<option value='MIDDLE'>MIDDLE</option>
-							<option value='FILL'>FILL</option>
-						</Input>
-					</Col>
-				</Row>
-				<Input type='textarea' placeholder='content' label='Content'
-					value={this.state.content} onChange={this.onInputChange.bind(this, 'content')}/>
-				<ImageInput ref='images' label='Images' multiple={true} imageUrl={this.props.segment.images}/>
+				{this.props.index!==0&&
+					<Row>
+						<Col xs={6} sm={2}>
+							<Input type='select' label='Mode' value={this.state.mode} disabled={this.props.index===0}
+								placeholder='select display mode' onChange={this.onInputChange.bind(this, 'mode')}>
+								<option value='LEFT'>LEFT</option>
+								<option value='RIGHT'>RIGHT</option>
+								<option value='MIDDLE'>MIDDLE</option>
+								<option value='FILL'>FILL</option>
+							</Input>
+						</Col>
+						<Col xs={12} sm={10}>
+							<ImageInput ref='images' label='Images' multiple={true} imageUrl={this.props.segment.images}/>
+						</Col>
+					</Row>
+				}
+				{this.state.mode!=='FILL'&&<Input type='text' placeholder='title' label='Title'
+					value={this.state.title} onChange={this.onInputChange.bind(this, 'title')}/>}
+				{this.state.mode!=='FILL'&&<Input type='textarea' placeholder='content' label='Content'
+					value={this.state.content} onChange={this.onInputChange.bind(this, 'content')}/>}
 			</div>
 		);
 	}
@@ -63,7 +65,7 @@ class SegmentItem extends React.Component {
 	}
 	getSegment() {
 		return Object.assign({},
-			this.state, {images: this.refs.images.getImages()});
+			this.state, this.props.index!==0&&{images: this.refs.images.getImages()});
 	}
 }
 

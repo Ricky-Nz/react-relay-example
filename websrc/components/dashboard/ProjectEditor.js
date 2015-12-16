@@ -1,7 +1,7 @@
 import React from 'react';
 import Relay from 'react-relay';
 import { Input, Button, Row, Col } from 'react-bootstrap';
-import { GnAlert } from '../';
+import { ProgressIndicator } from '../';
 import { CreateBuildingMutation, UpdateBuildingMutation, RemoveBuildingMutation } from '../../mutations';
 import ProjectBasicPanel from './ProjectBasicPanel';
 import ProjectSegmentsPanel from './ProjectSegmentsPanel';
@@ -17,7 +17,7 @@ class ProjectEditor extends React.Component {
 						<Input ref='password' type='password' label='Submit' placeholder='password'
 							buttonBefore={this.props.building&&<Button bsStyle='danger' onClick={this.onDelete.bind(this)}>Delete</Button>}
 							buttonAfter={<Button bsStyle='primary' onClick={this.onSubmit.bind(this)}>{this.props.building?'Update':'Create'}</Button>}/>
-						<GnAlert ref='alert'/>
+						<ProgressIndicator ref='alert'/>
 					</Col>
 				</Row>
 			</div>

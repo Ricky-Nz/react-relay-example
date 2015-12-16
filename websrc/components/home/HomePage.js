@@ -20,7 +20,7 @@ class HomePage extends React.Component {
 					<Col xs={10} xsOffset={1} md={8} mdOffset={2}>
 						<br/><br/><br/>
 						<CategoryTabs app={this.props.app}/>
-						<LabelFilter app={this.props.app}
+						<LabelFilter app={this.props.app} filter={this.props.relay.variables.filter}
 							onFilterChange={this.onFilterChange.bind(this)}/>
 						<ProjectGrid app={this.props.app}
 							onGridItemClick={this.onGridItemClick.bind(this)}/>
@@ -32,9 +32,7 @@ class HomePage extends React.Component {
 		);
 	}
 	onFilterChange(selects) {
-		this.props.relay.setVariables({
-			filter: selects
-		});
+		this.props.history.replace(selects?`?filter=${selects}`:'/');
 	}
 	onGridItemClick(project) {
 		this.props.history.push(`/project/${project.id}`);
@@ -44,6 +42,11 @@ class HomePage extends React.Component {
 export default Relay.createContainer(HomePage, {
 	initialVariables: {
 		filter: null
+	},
+	prepareVariables: (variables) => {
+		return {
+			filter: variables.filter?variables.filter.split(','):null
+		};
 	},
 	fragments: {
 		app: () => Relay.QL`

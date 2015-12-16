@@ -8,6 +8,7 @@ class HomeBanner extends React.Component {
 		const topItem = {
 			marginTop: 50,
 			zIndex: 3,
+			cursor: 'pointer',
 			WebkitBoxShadow: 'inset 0px 0px 35px 0px rgba(10,10,0,0.5)',
 			MozBoxShadow: 'inset 0px 0px 35px 0px rgba(10,10,0,0.5)',
 			boxShadow: 'inset 0px 0px 35px 0px rgba(10,10,0,0.5)'

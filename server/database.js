@@ -1,4 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
+import fs from 'fs-extra';
+import path from 'path';
 
 var SegmentSchema = new Schema({
 	title: { type: String },
@@ -40,8 +42,8 @@ export function createBuilding(fields, files) {
 export function updateBuilding({id, ...updateFields}, files) {
 	return DBBuilding.findById(id).exec().then(building => {
 		processFiles(files, updateFields, building);
-		Object.assign(building, updateFields);
-		return building.update();
+
+		return DBBuilding.findByIdAndUpdate(id, updateFields, {'new': true}).exec();
 	});
 }
 
@@ -91,21 +93,17 @@ export function updateApp(fields) {
 	return DBApp.findOneAndUpdate({}, fields, {'new': true}).exec();
 }
 
-function deleteFileInExist(path) {
-	if (path) {
+function deleteFileInExist(filePath) {
+	if (filePath) {
 		try {
-			fs.unlinkSync(path.join(__dirname, '..', path));
+			fs.removeSync(path.join(__dirname, '..', filePath));
 		} catch(e) {
 		}
 	}
 }
 
 function processFiles(files, updateFields, currentData) {
-	if (!files) {
-		return;
-	}
-
-	files.forEach(file => {
+	files&&files.forEach(file => {
 		if (file.fieldname === 'banner') {
 			deleteFileInExist(currentData&&currentData.banner);
 			updateFields.banner = file.path;
@@ -126,20 +124,29 @@ function processFiles(files, updateFields, currentData) {
 		}
 	});
 
-	if (updateFields.segments&&currentData&&currentData.segments) {
-		let updatedFiles = [];
-		updateFields.segments.forEach(segment => {
-			segment.images&&segment.images.forEach(image =>
-				updateFields.push(image));
-		});
+	if (currentData) {
+		if (currentData.banner&&!updateFields.banner) {
+			deleteFileInExist(currentData.banner);
+		}
+		if (currentData.thumbnail&&!updateFields.thumbnail) {
+			deleteFileInExist(currentData.thumbnail);
+		}
 
-		currentData.segments.forEach(segment => {
-			segment.images&&segment.images.forEach(image => {
-				if (updateFields.indexOf(image) < 0) {
-					deleteFileInExist(image);
-				}
+		if (currentData.segments) {
+			let newFilePathArray = [];
+			updateFields.segments&&updateFields.segments.forEach(segment => {
+				segment.images&&segment.images.forEach(image =>
+					newFilePathArray.push(image));
 			});
-		});
+
+			currentData.segments.forEach(segment => {
+				segment.images&&segment.images.forEach(image => {
+					if (newFilePathArray.indexOf(image) < 0) {
+						deleteFileInExist(image);
+					}
+				});
+			});
+		}
 	}
 }
 
