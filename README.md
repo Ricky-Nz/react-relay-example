@@ -1,7 +1,7 @@
 # React Relay Example
 
-Example for building a React App with Relay, React-router and React-bootstrap.
-This project includes an dev server and a GraphQL server.
+Example for building React App with Relay, React-router and React-bootstrap.
+This project also includes an dev server and a GraphQL server.
 
 ## Installation
 
@@ -11,7 +11,7 @@ npm install
 
 ## Running
 
-Start a local server:
+Start graphQL server:
 
 ```
 npm start
