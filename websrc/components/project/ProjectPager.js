@@ -5,7 +5,7 @@ import _ from 'underscore';
 
 class ProjectPager extends React.Component {
 	render() {
-		const projects = this.props.app.buildings;
+		const projects = this.props.app.projects;
 		const index = projects&&_.findIndex(projects.edges,
 			({node}) => node.id === this.props.currentId);
 		const previousItem = projects&&projects.edges[index-1];
@@ -29,7 +29,7 @@ export default Relay.createContainer(ProjectPager, {
 	fragments: {
 		app: () => Relay.QL`
 			fragment on App {
-				buildings(first: 1000) {
+				projects(first: 1000) {
 					edges {
 						node {
 							id

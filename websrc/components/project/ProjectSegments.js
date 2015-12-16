@@ -8,7 +8,7 @@ import _ from 'underscore';
 
 class ProjectSegments extends React.Component {
 	render() {
-		const building = this.props.building;
+		const project = this.props.project;
 		const contentStyle = {
 			padding: '30px 20px',
 		    display: 'inline-block',
@@ -25,7 +25,7 @@ class ProjectSegments extends React.Component {
 			smOffset: 2
 		};
 
-		let segmentItems = building.segments.map((segment, index) => {
+		let segmentItems = project.segments.map((segment, index) => {
 			if (index == 0) {
 				return (
 					<Col key={index} style={contentStyle} {...bslayout}>
@@ -87,7 +87,7 @@ class ProjectSegments extends React.Component {
 		segmentItems = _.flatten(segmentItems)
 		segmentItems.unshift(
 			<Col key='start' style={{position:'relative'}} {...bslayout} {...bsOffset}>
-				<ProjectNamecard style={{position:'absolute',top:-79}} building={building}/>
+				<ProjectNamecard style={{position:'absolute',top:-79}} project={project}/>
 				<div style={{height:100}}/>
 			</Col>
 		);
@@ -102,9 +102,9 @@ class ProjectSegments extends React.Component {
 
 export default Relay.createContainer(ProjectSegments, {
 	fragments: {
-		building: () => Relay.QL`
-			fragment on Building {
-				${ProjectNamecard.getFragment('building')}
+		project: () => Relay.QL`
+			fragment on Project {
+				${ProjectNamecard.getFragment('project')}
 				segments {
 					mode
 					${SegmentText.getFragment('segment')}

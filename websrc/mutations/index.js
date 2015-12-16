@@ -1,11 +1,11 @@
-import CreateBuildingMutation from './CreateBuildingMutation';
-import UpdateBuildingMutation from './UpdateBuildingMutation';
-import RemoveBuildingMutation from './RemoveBuildingMutation';
+import CreateProjectMutation from './CreateProjectMutation';
+import UpdateProjectMutation from './UpdateProjectMutation';
+import RemoveProjectMutation from './RemoveProjectMutation';
 import UpdateAppMutation from './UpdateAppMutation';
 
 export {
-	CreateBuildingMutation,
-	UpdateBuildingMutation,
-	RemoveBuildingMutation,
+	CreateProjectMutation,
+	UpdateProjectMutation,
+	RemoveProjectMutation,
 	UpdateAppMutation
 };

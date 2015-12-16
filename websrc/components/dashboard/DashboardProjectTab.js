@@ -12,7 +12,7 @@ class DashboardProject extends React.Component {
 					<ProjectList app={this.props.app} select={this.props.params.id}/>
 				</Col>
 				<Col xs={7}>
-					<ProjectEditor app={this.props.app} building={this.props.app.building||null}/>
+					<ProjectEditor app={this.props.app} project={this.props.app.project||null}/>
 				</Col>
 			</Row>
 		)
@@ -26,7 +26,7 @@ export default Relay.createContainer(DashboardProject, {
 	prepareVariables: (variables) => {
 		return {
 			...variables,
-			fetchBuilding: variables.id ? true : false
+			fetchProject: variables.id ? true : false
 		};
 	},
 	fragments: {
@@ -34,8 +34,8 @@ export default Relay.createContainer(DashboardProject, {
 			fragment on App {
 				${ProjectList.getFragment('app')},
 				${ProjectEditor.getFragment('app')},
-				building(id: $id) @include(if: $fetchBuilding) {
-					${ProjectEditor.getFragment('building')}
+				project(id: $id) @include(if: $fetchProject) {
+					${ProjectEditor.getFragment('project')}
 				}
 			}
 		`

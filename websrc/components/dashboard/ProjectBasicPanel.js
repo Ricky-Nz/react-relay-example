@@ -13,7 +13,7 @@ class ProjectBasicEditor extends React.Component {
 	}
 	render() {
 		const app = this.props.app;
-		const editBuilding = this.state;
+		const editProject = this.state;
 		const categoryOptions = app.categories&&app.categories.map((category, index) =>
 			<option key={index} value={category}>{category}</option>);
 		const projectTypeOptions = app.projectTypes&&app.projectTypes.map((type, index) =>
@@ -25,66 +25,66 @@ class ProjectBasicEditor extends React.Component {
 			<Panel header='Basic'>
 				<Row>
 					<Col xs={12}>
-						<Input type='text' placeholder='name' label='Name' value={editBuilding.name}
+						<Input type='text' placeholder='name' label='Name' value={editProject.name}
 							onChange={this.onInputChanged.bind(this, 'name')}/>
 					</Col>
 					<Col xs={12}>
-						<LabelSelector title='Labels' allLabels={app.labels} selectLabels={editBuilding.labels}
+						<LabelSelector title='Labels' allLabels={app.labels} selectLabels={editProject.labels}
 							onSelectChange={selects => this.setState({labels: selects})}/>
 					</Col>
 					<Col xs={6} md={4}>
-						<Input type='text' placeholder='index' label='Index' value={editBuilding.index}
+						<Input type='text' placeholder='index' label='Index' value={editProject.index}
 							onChange={this.onInputChanged.bind(this, 'index')}/>
 					</Col>
 					<Col xs={6} md={4}>
-						<Input type='select' label='Category' value={editBuilding.category||'None'}
+						<Input type='select' label='Category' value={editProject.category||'None'}
 							placeholder='select category' onChange={this.onInputChanged.bind(this, 'category')}>
 							<option value=''>None</option>
 							{categoryOptions}
 						</Input>
 					</Col>
 					<Col xs={6} md={4}>
-						<Input type='select' label='Put On Banner Slot' value={editBuilding.promote}
+						<Input type='select' label='Put On Banner Slot' value={editProject.promote}
 							placeholder='select slot position' onChange={this.onInputChanged.bind(this, 'promote')}>
 							<option value=''>None</option>
 							{promoteOptions}
 						</Input>
 					</Col>
 					<Col xs={12}>
-						<Input type='textarea' placeholder='location' label='Location' value={editBuilding.location}
+						<Input type='textarea' placeholder='location' label='Location' value={editProject.location}
 							onChange={this.onInputChanged.bind(this, 'location')}/>
 					</Col>
 					<Col xs={6} md={4}>
-						<Input type='select' label='Project Type' value={editBuilding.type}
+						<Input type='select' label='Project Type' value={editProject.type}
 							placeholder='select type' onChange={this.onInputChanged.bind(this, 'type')}>
 							<option value=''>None</option>
 							{projectTypeOptions}
 						</Input>
 					</Col>
 					<Col xs={6} md={4}>
-						<Input type='text' placeholder='area' label='Area' value={editBuilding.area}
+						<Input type='text' placeholder='area' label='Area' value={editProject.area}
 							onChange={this.onInputChanged.bind(this, 'area')}/>
 					</Col>
 					<Col xs={6} md={4}>
-						<Input type='text' placeholder='status' label='Status' value={editBuilding.status}
+						<Input type='text' placeholder='status' label='Status' value={editProject.status}
 							onChange={this.onInputChanged.bind(this, 'status')}/>
 					</Col>
 					<Col xs={6} md={4}>
-						<Input type='text' placeholder='order' label='Sort Order' value={editBuilding.order}
+						<Input type='text' placeholder='order' label='Sort Order' value={editProject.order}
 							onChange={this.onInputChanged.bind(this, 'order')}/>
 					</Col>
 					<Col xs={6} md={4}>
-						<ImageInput ref='banner' label='Banner' imageUrl={this.props.building&&this.props.building.banner}/>
+						<ImageInput ref='banner' label='Banner' imageUrl={this.props.project&&this.props.project.banner}/>
 					</Col>
 					<Col xs={6} md={4}>
-						<ImageInput ref='thumbnail' label='Thumbnail' imageUrl={this.props.building&&this.props.building.thumbnail}/>
+						<ImageInput ref='thumbnail' label='Thumbnail' imageUrl={this.props.project&&this.props.project.thumbnail}/>
 					</Col>
 				</Row>
 			</Panel>
 		);
 	}
 	onPropChanged(props) {
-		return Object.assign({}, props.building);
+		return Object.assign({}, props.project);
 	}
 	onInputChanged(fieldName, e) {
 		this.setState({ [fieldName]: e.target.value });
@@ -107,8 +107,8 @@ export default Relay.createContainer(ProjectBasicEditor, {
 				projectTypes
 			}
 		`,	
-		building: () => Relay.QL`
-			fragment on Building {
+		project: () => Relay.QL`
+			fragment on Project {
 				name,
 				index,
 				order,

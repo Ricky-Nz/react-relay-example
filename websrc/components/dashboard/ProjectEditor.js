@@ -2,7 +2,7 @@ import React from 'react';
 import Relay from 'react-relay';
 import { Input, Button, Row, Col } from 'react-bootstrap';
 import { ProgressIndicator } from '../';
-import { CreateBuildingMutation, UpdateBuildingMutation, RemoveBuildingMutation } from '../../mutations';
+import { CreateProjectMutation, UpdateProjectMutation, RemoveProjectMutation } from '../../mutations';
 import ProjectBasicPanel from './ProjectBasicPanel';
 import ProjectSegmentsPanel from './ProjectSegmentsPanel';
 
@@ -10,13 +10,13 @@ class ProjectEditor extends React.Component {
 	render() {
 		return (
 			<div>
-				<ProjectBasicPanel ref='basicEditor' app={this.props.app} building={this.props.building}/>
-				<ProjectSegmentsPanel ref='segmentsEditor' building={this.props.building}/>
+				<ProjectBasicPanel ref='basicEditor' app={this.props.app} project={this.props.project}/>
+				<ProjectSegmentsPanel ref='segmentsEditor' project={this.props.project}/>
 				<Row>
 					<Col xs={12} sm={8} md={6} lg={5}>
 						<Input ref='password' type='password' label='Submit' placeholder='password'
-							buttonBefore={this.props.building&&<Button bsStyle='danger' onClick={this.onDelete.bind(this)}>Delete</Button>}
-							buttonAfter={<Button bsStyle='primary' onClick={this.onSubmit.bind(this)}>{this.props.building?'Update':'Create'}</Button>}/>
+							buttonBefore={this.props.project&&<Button bsStyle='danger' onClick={this.onDelete.bind(this)}>Delete</Button>}
+							buttonAfter={<Button bsStyle='primary' onClick={this.onSubmit.bind(this)}>{this.props.project?'Update':'Create'}</Button>}/>
 						<ProgressIndicator ref='alert'/>
 					</Col>
 				</Row>
@@ -44,17 +44,17 @@ class ProjectEditor extends React.Component {
 			});
 		});
 
-		if (this.props.building) {
-			Relay.Store.update(new UpdateBuildingMutation({
+		if (this.props.project) {
+			Relay.Store.update(new UpdateProjectMutation({
 				password: this.refs.password.refs.input.value,
-				building: this.props.building,
+				project: this.props.project,
 				...project
 			}), {
 				onFailure: this.onMutationFailure.bind(this),
 				onSuccess: this.onMutationSuccess.bind(this)
 			});
 		} else {
-			Relay.Store.update(new CreateBuildingMutation({
+			Relay.Store.update(new CreateProjectMutation({
 				password: this.refs.password.refs.input.value,
 				app: this.props.app,
 				...project
@@ -66,8 +66,8 @@ class ProjectEditor extends React.Component {
 		this.refs.alert.start();
 	}
 	onDelete() {
-		Relay.Store.update(new RemoveBuildingMutation({
-			building: this.props.building,
+		Relay.Store.update(new RemoveProjectMutation({
+			project: this.props.project,
 			password: this.refs.password.refs.input.value,
 			app: this.props.app
 		}), {
@@ -94,17 +94,17 @@ export default Relay.createContainer(ProjectEditor, {
 			fragment on App {
 				id,
 				${ProjectBasicPanel.getFragment('app')},
-				${CreateBuildingMutation.getFragment('app')},
-				${RemoveBuildingMutation.getFragment('app')}
+				${CreateProjectMutation.getFragment('app')},
+				${RemoveProjectMutation.getFragment('app')}
 			}
 		`,
-		building: () => Relay.QL`
-			fragment on Building {
+		project: () => Relay.QL`
+			fragment on Project {
 				id,
-				${ProjectBasicPanel.getFragment('building')},
-				${ProjectSegmentsPanel.getFragment('building')},
-				${UpdateBuildingMutation.getFragment('building')},
-				${RemoveBuildingMutation.getFragment('building')}
+				${ProjectBasicPanel.getFragment('project')},
+				${ProjectSegmentsPanel.getFragment('project')},
+				${UpdateProjectMutation.getFragment('project')},
+				${RemoveProjectMutation.getFragment('project')}
 			}
 		`
 	}

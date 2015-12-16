@@ -1,20 +1,20 @@
 import Relay from 'react-relay';
 
-export default class UpdateBuildingMutation extends Relay.Mutation {
+export default class UpdateProjectMutation extends Relay.Mutation {
 	static fragments = {
-		building: () => Relay.QL`
-			fragment on Building {
+		project: () => Relay.QL`
+			fragment on Project {
 				id
 			}
 		`
 	};
 	getMutation() {
-		return Relay.QL`mutation{updateBuilding}`;
+		return Relay.QL`mutation{updateProject}`;
 	}
 	getFatQuery() {
 		return Relay.QL`
-			fragment on UpdateBuildingPayload {
-				building {
+			fragment on UpdateProjectPayload {
+				project {
 					id,
 					name,
 					index,
@@ -37,14 +37,14 @@ export default class UpdateBuildingMutation extends Relay.Mutation {
 		return [{
 			type: 'FIELDS_CHANGE',
 			fieldIDs: {
-				building: this.props.building.id
+				project: this.props.project.id
 			}
 		}];
 	}
 	getVariables() {
 		return {
 			password: this.props.password,
-			id: this.props.building.id,
+			id: this.props.project.id,
 			name: this.props.name,
 			index: this.props.index,
 			order: this.props.order,

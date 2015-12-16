@@ -5,13 +5,13 @@ import { Link } from 'react-router';
 
 class ProjectGridItem extends React.Component {
 	render() {
-		const {building, ...otherProps} = this.props;
+		const {project, ...otherProps} = this.props;
 		const itemStyle = {
 			width: 180,
 			height: 180,
 			margin: 10,
 			padding: 0,
-  			background: `url(${building.thumbnail}) no-repeat`,
+  			background: `url(${project.thumbnail}) no-repeat`,
   			backgroundSize: 'cover',
   			backgroundPosition: 'center',
   			color: 'white'
@@ -56,14 +56,14 @@ class ProjectGridItem extends React.Component {
 		};
 
 		return (
-			<ListGroupItem style={itemStyle} onClick={() => this.props.onClick(building)}>
+			<ListGroupItem style={itemStyle} onClick={() => this.props.onClick(project)}>
 				<div style={{height: 180, width: 180}}>
 					<div style={titleContent}>
-						<div style={indexFont}>{building.index}</div>
+						<div style={indexFont}>{project.index}</div>
 						<div style={spliter}></div>
 						<div style={nameFont}>
-							{building.name}
-							<div style={locationFont} >{building.location}</div>
+							{project.name}
+							<div style={locationFont} >{project.location}</div>
 						</div>
 					</div>
 					<div style={underLine}></div>
@@ -75,8 +75,8 @@ class ProjectGridItem extends React.Component {
 
 export default Relay.createContainer(ProjectGridItem, {
 	fragments: {
-		building: () => Relay.QL`
-			fragment on Building {
+		project: () => Relay.QL`
+			fragment on Project {
 				id,
 				name,
 				index,

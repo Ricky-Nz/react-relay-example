@@ -9,7 +9,7 @@ import ProjectGrid from './ProjectGrid';
 
 class HomePage extends React.Component {
 	render() {
-		const { labels, buildings, promotes } = this.props.app;
+		const { labels, projects, promotes } = this.props.app;
 
 		return (
 			<div>

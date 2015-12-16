@@ -9,7 +9,7 @@ var SegmentSchema = new Schema({
 	mode: { type: String }
 });
 
-export var DBBuilding = mongoose.model('DBBuilding', new Schema({
+export var DBProject = mongoose.model('DBProject', new Schema({
 	name: { type: String, required: true },
 	index: { type: String },
 	order: { type: String },
@@ -32,48 +32,48 @@ export var DBApp = mongoose.model('DBApp', new Schema({
 	projectTypes: [String]
 }));
 
-export function createBuilding(fields, files) {
+export function createProject(fields, files) {
 	processFiles(files, fields);
-	var building = new DBBuilding();
-	Object.assign(building, fields);
-	return building.save();
+	var project = new DBProject();
+	Object.assign(project, fields);
+	return project.save();
 };
 
-export function updateBuilding({id, ...updateFields}, files) {
-	return DBBuilding.findById(id).exec().then(building => {
-		processFiles(files, updateFields, building);
+export function updateProject({id, ...updateFields}, files) {
+	return DBProject.findById(id).exec().then(project => {
+		processFiles(files, updateFields, project);
 
-		return DBBuilding.findByIdAndUpdate(id, updateFields, {'new': true}).exec();
+		return DBProject.findByIdAndUpdate(id, updateFields, {'new': true}).exec();
 	});
 }
 
-export function removeBuilding(id) {
-	return DBBuilding.findById(id).exec().then(building => {
-		deleteFileInExist(building.banner);
-		deleteFileInExist(building.thumbnail);
-		if (building.segments) {
-			building.segments.forEach(segment =>
+export function removeProject(id) {
+	return DBProject.findById(id).exec().then(project => {
+		deleteFileInExist(project.banner);
+		deleteFileInExist(project.thumbnail);
+		if (project.segments) {
+			project.segments.forEach(segment =>
 				segment.images&&segment.images.forEach(image =>
 					deleteFileInExist(image)));
 		}
-		return building.remove();
+		return project.remove();
 	});
 }
 
-export function findBuildings(labels) {
+export function findProjects(labels) {
 	let query = {};
 	if (labels&&labels.length>0) {
 		query.label = { $in: labels };
 	}
-	return DBBuilding.find(query).sort({order: -1, name: 1}).exec();
+	return DBProject.find(query).sort({order: -1, name: 1}).exec();
 }
 
-export function findPromoteBuildings() {
-	return DBBuilding.find({promote: { $gt: 0 }}).sort('promote');
+export function findPromoteProjects() {
+	return DBProject.find({promote: { $gt: 0 }}).sort('promote');
 }
 
-export function findBuildingById(id) {
-	return DBBuilding.findById(id).exec();
+export function findProjectById(id) {
+	return DBProject.findById(id).exec();
 };
 
 export function getApp() {

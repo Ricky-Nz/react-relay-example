@@ -4,7 +4,7 @@ import Relay from 'react-relay';
 
 class ProjectNamecard extends React.Component {
 	render() {
-		const building = this.props.building;
+		const project = this.props.project;
 		const contentStyle = Object.assign({
 			padding: '20px 30px',
 			background: 'rgba(41, 182, 246, 0.75)',
@@ -16,25 +16,25 @@ class ProjectNamecard extends React.Component {
 		return (
 			<div style={contentStyle}>
 				PROJECT NAME
-				<div style={titleFont}>{`${building.index} | ${building.name}`}</div>
+				<div style={titleFont}>{`${project.index} | ${project.name}`}</div>
 				<Row>
 					<Col xs={6}>
 						LOCATION
-						<div>{building.location}</div>
+						<div>{project.location}</div>
 					</Col>
 					<Col xs={6}>
 						TYPE
-						<div>{building.type}</div>
+						<div>{project.type}</div>
 					</Col>
 				</Row>
 				<Row>
 					<Col xs={6}>
 						AREA
-						<div>{building.area}</div>
+						<div>{project.area}</div>
 					</Col>
 					<Col xs={6}>
 						STATUS
-						<div>{building.status}</div>
+						<div>{project.status}</div>
 					</Col>
 				</Row>
 			</div>
@@ -44,8 +44,8 @@ class ProjectNamecard extends React.Component {
 
 export default Relay.createContainer(ProjectNamecard, {
 	fragments: {
-		building: () => Relay.QL`
-			fragment on Building {
+		project: () => Relay.QL`
+			fragment on Project {
 				name,
 				index,
 				location,

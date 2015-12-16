@@ -114,7 +114,7 @@
               "deprecationReason": null
             },
             {
-              "name": "buildings",
+              "name": "projects",
               "description": null,
               "args": [
                 {
@@ -174,7 +174,7 @@
               ],
               "type": {
                 "kind": "OBJECT",
-                "name": "BuildingConnection",
+                "name": "ProjectConnection",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -227,14 +227,14 @@
               ],
               "type": {
                 "kind": "OBJECT",
-                "name": "BuildingConnection",
+                "name": "ProjectConnection",
                 "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "building",
+              "name": "project",
               "description": null,
               "args": [
                 {
@@ -254,7 +254,7 @@
               ],
               "type": {
                 "kind": "OBJECT",
-                "name": "Building",
+                "name": "Project",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -298,7 +298,7 @@
         },
         {
           "kind": "OBJECT",
-          "name": "BuildingConnection",
+          "name": "ProjectConnection",
           "description": "A connection to a list of items.",
           "fields": [
             {
@@ -326,7 +326,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "BuildingEdge",
+                  "name": "ProjectEdge",
                   "ofType": null
                 }
               },
@@ -418,7 +418,7 @@
         },
         {
           "kind": "OBJECT",
-          "name": "BuildingEdge",
+          "name": "ProjectEdge",
           "description": "An edge in a connection.",
           "fields": [
             {
@@ -427,7 +427,7 @@
               "args": [],
               "type": {
                 "kind": "OBJECT",
-                "name": "Building",
+                "name": "Project",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -457,8 +457,8 @@
         },
         {
           "kind": "OBJECT",
-          "name": "Building",
-          "description": "buildings",
+          "name": "Project",
+          "description": "projects",
           "fields": [
             {
               "name": "id",
@@ -645,7 +645,7 @@
         {
           "kind": "OBJECT",
           "name": "Segment",
-          "description": "Building description segment",
+          "description": "Project description segment",
           "fields": [
             {
               "name": "title",
@@ -738,7 +738,7 @@
               "deprecationReason": null
             },
             {
-              "name": "createBuilding",
+              "name": "createProject",
               "description": null,
               "args": [
                 {
@@ -749,7 +749,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "CreateBuildingInput",
+                      "name": "CreateProjectInput",
                       "ofType": null
                     }
                   },
@@ -758,14 +758,14 @@
               ],
               "type": {
                 "kind": "OBJECT",
-                "name": "CreateBuildingPayload",
+                "name": "CreateProjectPayload",
                 "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "updateBuilding",
+              "name": "updateProject",
               "description": null,
               "args": [
                 {
@@ -776,7 +776,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "UpdateBuildingInput",
+                      "name": "UpdateProjectInput",
                       "ofType": null
                     }
                   },
@@ -785,14 +785,14 @@
               ],
               "type": {
                 "kind": "OBJECT",
-                "name": "UpdateBuildingPayload",
+                "name": "UpdateProjectPayload",
                 "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "removeBuilding",
+              "name": "removeProject",
               "description": null,
               "args": [
                 {
@@ -803,7 +803,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "RemoveBuildingInput",
+                      "name": "RemoveProjectInput",
                       "ofType": null
                     }
                   },
@@ -812,7 +812,7 @@
               ],
               "type": {
                 "kind": "OBJECT",
-                "name": "RemoveBuildingPayload",
+                "name": "RemoveProjectPayload",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -956,7 +956,7 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "CreateBuildingInput",
+          "name": "CreateProjectInput",
           "description": null,
           "fields": null,
           "inputFields": [
@@ -1118,7 +1118,7 @@
         {
           "kind": "INPUT_OBJECT",
           "name": "SegmentInput",
-          "description": "Building description segment",
+          "description": "Project description segment",
           "fields": null,
           "inputFields": [
             {
@@ -1172,16 +1172,16 @@
         },
         {
           "kind": "OBJECT",
-          "name": "CreateBuildingPayload",
+          "name": "CreateProjectPayload",
           "description": null,
           "fields": [
             {
-              "name": "buildingEdge",
+              "name": "projectEdge",
               "description": null,
               "args": [],
               "type": {
                 "kind": "OBJECT",
-                "name": "BuildingEdge",
+                "name": "ProjectEdge",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -1223,7 +1223,7 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "UpdateBuildingInput",
+          "name": "UpdateProjectInput",
           "description": null,
           "fields": null,
           "inputFields": [
@@ -1414,16 +1414,16 @@
         },
         {
           "kind": "OBJECT",
-          "name": "UpdateBuildingPayload",
+          "name": "UpdateProjectPayload",
           "description": null,
           "fields": [
             {
-              "name": "building",
+              "name": "project",
               "description": null,
               "args": [],
               "type": {
                 "kind": "OBJECT",
-                "name": "Building",
+                "name": "Project",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -1453,7 +1453,7 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "RemoveBuildingInput",
+          "name": "RemoveProjectInput",
           "description": null,
           "fields": null,
           "inputFields": [
@@ -1506,11 +1506,11 @@
         },
         {
           "kind": "OBJECT",
-          "name": "RemoveBuildingPayload",
+          "name": "RemoveProjectPayload",
           "description": null,
           "fields": [
             {
-              "name": "deletedBuildingId",
+              "name": "deletedProjectId",
               "description": null,
               "args": [],
               "type": {

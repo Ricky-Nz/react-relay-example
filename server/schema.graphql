@@ -4,12 +4,48 @@ type App {
   categories: [String]
   labels: [String]
   projectTypes: [String]
-  buildings(labels: [String], after: String, first: Int, before: String, last: Int): BuildingConnection
-  promotes(after: String, first: Int, before: String, last: Int): BuildingConnection
-  building(id: ID!): Building
+  projects(labels: [String], after: String, first: Int, before: String, last: Int): ProjectConnection
+  promotes(after: String, first: Int, before: String, last: Int): ProjectConnection
+  project(id: ID!): Project
 }
 
-type Building {
+input CreateProjectInput {
+  password: String!
+  name: String!
+  index: String
+  order: String
+  category: String
+  promote: String
+  location: String
+  type: String
+  area: String
+  status: String
+  labels: [String]
+  segments: [SegmentInput]
+  clientMutationId: String!
+}
+
+type CreateProjectPayload {
+  projectEdge: ProjectEdge
+  app: App
+  clientMutationId: String!
+}
+
+type Mutation {
+  updateApp(input: UpdateAppInput!): UpdateAppPayload
+  createProject(input: CreateProjectInput!): CreateProjectPayload
+  updateProject(input: UpdateProjectInput!): UpdateProjectPayload
+  removeProject(input: RemoveProjectInput!): RemoveProjectPayload
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type Project {
   id: ID
   name: String
   index: String
@@ -26,64 +62,28 @@ type Building {
   segments: [Segment]
 }
 
-type BuildingConnection {
+type ProjectConnection {
   pageInfo: PageInfo!
-  edges: [BuildingEdge]
+  edges: [ProjectEdge]
 }
 
-type BuildingEdge {
-  node: Building
+type ProjectEdge {
+  node: Project
   cursor: String!
-}
-
-input CreateBuildingInput {
-  password: String!
-  name: String!
-  index: String
-  order: String
-  category: String
-  promote: String
-  location: String
-  type: String
-  area: String
-  status: String
-  labels: [String]
-  segments: [SegmentInput]
-  clientMutationId: String!
-}
-
-type CreateBuildingPayload {
-  buildingEdge: BuildingEdge
-  app: App
-  clientMutationId: String!
-}
-
-type Mutation {
-  updateApp(input: UpdateAppInput!): UpdateAppPayload
-  createBuilding(input: CreateBuildingInput!): CreateBuildingPayload
-  updateBuilding(input: UpdateBuildingInput!): UpdateBuildingPayload
-  removeBuilding(input: RemoveBuildingInput!): RemoveBuildingPayload
-}
-
-type PageInfo {
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-  startCursor: String
-  endCursor: String
 }
 
 type Query {
   app: App
 }
 
-input RemoveBuildingInput {
+input RemoveProjectInput {
   password: String!
   id: ID!
   clientMutationId: String!
 }
 
-type RemoveBuildingPayload {
-  deletedBuildingId: String
+type RemoveProjectPayload {
+  deletedProjectId: String
   app: App
   clientMutationId: String!
 }
@@ -116,7 +116,7 @@ type UpdateAppPayload {
   clientMutationId: String!
 }
 
-input UpdateBuildingInput {
+input UpdateProjectInput {
   password: String!
   id: ID!
   name: String
@@ -135,7 +135,7 @@ input UpdateBuildingInput {
   clientMutationId: String!
 }
 
-type UpdateBuildingPayload {
-  building: Building
+type UpdateProjectPayload {
+  project: Project
   clientMutationId: String!
 }

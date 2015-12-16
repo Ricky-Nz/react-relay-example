@@ -4,7 +4,7 @@ import { ListGroupItem } from 'react-bootstrap';
 
 class DashboardProjectListItem extends React.Component {
 	render() {
-		const { id, name, order, promote } = this.props.building;
+		const { id, name, order, promote } = this.props.project;
 		return (
 			<ListGroupItem header={name} active={id===this.props.select}
 				href={`/console/project/${id}`}>
@@ -20,8 +20,8 @@ DashboardProjectListItem.propTypes = {
 
 export default Relay.createContainer(DashboardProjectListItem, {
 	fragments: {
-		building: () => Relay.QL`
-			fragment on Building {
+		project: () => Relay.QL`
+			fragment on Project {
 				id,
 				name,
 				order,

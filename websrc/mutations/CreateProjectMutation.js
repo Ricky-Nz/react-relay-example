@@ -1,6 +1,6 @@
 import Relay from 'react-relay';
 
-export default class CreateBuildingMutation extends Relay.Mutation {
+export default class CreateProjectMutation extends Relay.Mutation {
 	static fragments = {
 		app: () => Relay.QL`
 			fragment on App {
@@ -9,14 +9,14 @@ export default class CreateBuildingMutation extends Relay.Mutation {
 		`
 	};
 	getMutation() {
-		return Relay.QL`mutation{createBuilding}`;
+		return Relay.QL`mutation{createProject}`;
 	}
 	getFatQuery() {
 		return Relay.QL`
-			fragment on CreateBuildingPayload {
-				buildingEdge,
+			fragment on CreateProjectPayload {
+				projectEdge,
 				app {
-					buildings
+					projects
 				}
 			}
 		`
@@ -26,8 +26,8 @@ export default class CreateBuildingMutation extends Relay.Mutation {
 			type: 'RANGE_ADD',
 			parentName: 'app',
 			parentID: this.props.app.id,
-			connectionName: 'buildings',
-			edgeName: 'buildingEdge',
+			connectionName: 'projects',
+			edgeName: 'projectEdge',
 			rangeBehaviors: {
 				'': 'append'
 			}

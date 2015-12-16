@@ -1,9 +1,9 @@
 import Relay from 'react-relay';
 
-export default class RemoveBuildingMutation extends Relay.Mutation {
+export default class RemoveProjectMutation extends Relay.Mutation {
 	static fragments = {
-		building: () => Relay.QL`
-			fragment on Building {
+		project: () => Relay.QL`
+			fragment on Project {
 				id
 			}
 		`,
@@ -14,12 +14,12 @@ export default class RemoveBuildingMutation extends Relay.Mutation {
 		`
 	};
 	getMutation() {
-		return Relay.QL`mutation{removeBuilding}`;
+		return Relay.QL`mutation{removeProject}`;
 	}
 	getFatQuery() {
 		return Relay.QL`
-			fragment on RemoveBuildingPayload {
-				deletedBuildingId,
+			fragment on RemoveProjectPayload {
+				deletedProjectId,
 				app {
 					id
 				}
@@ -31,14 +31,14 @@ export default class RemoveBuildingMutation extends Relay.Mutation {
 			type: 'NODE_DELETE',
 			parentName: 'app',
 			parentID: this.props.app.id,
-			connectionName: 'buildings',
-			deletedIDFieldName: 'deletedBuildingId'
+			connectionName: 'projects',
+			deletedIDFieldName: 'deletedProjectId'
 		}];
 	}
 	getVariables() {
 		return {
 			password: this.props.password,
-			id: this.props.building.id
+			id: this.props.project.id
 		};
 	}
 }

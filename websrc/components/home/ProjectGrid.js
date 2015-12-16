@@ -4,7 +4,7 @@ import ProjectGridItem from './ProjectGridItem';
 
 class ProjectGrid extends React.Component {
 	render() {
-		const projects = this.props.app.buildings;
+		const projects = this.props.app.projects;
 		const contentStyle = {
 			display: 'flex',
 			flexDirection: 'row',
@@ -12,7 +12,7 @@ class ProjectGrid extends React.Component {
 			flexWrap: 'wrap'
 		};
 		const gridItems = projects&&projects.edges.map(({node}, index) =>
-			<ProjectGridItem key={index} building={node}
+			<ProjectGridItem key={index} project={node}
 				onClick={this.props.onGridItemClick}/>);
 
 		return (
@@ -34,10 +34,10 @@ export default Relay.createContainer(ProjectGrid, {
 	fragments: {
 		app: () => Relay.QL`
 			fragment on App {
-				buildings(labels: $filter, first: 1000) {
+				projects(labels: $filter, first: 1000) {
 					edges {
 						node {
-							${ProjectGridItem.getFragment('building')}
+							${ProjectGridItem.getFragment('project')}
 						}
 					}
 				}

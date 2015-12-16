@@ -23,13 +23,13 @@ import {
 } from 'graphql-relay';
 
 import {
-	DBBuilding,
-	createBuilding,
-	updateBuilding,
-	removeBuilding,
-	findBuildingById,
-	findBuildings,
-	findPromoteBuildings,
+	DBProject,
+	createProject,
+	updateProject,
+	removeProject,
+	findProjectById,
+	findProjects,
+	findPromoteProjects,
 	initApp,
 	getApp,
 	updateApp
@@ -45,7 +45,7 @@ function confirmPassword(password) {
 
 var GraphQLSegment = new GraphQLObjectType({
 	name: 'Segment',
-	description: 'Building description segment',
+	description: 'Project description segment',
 	fields: () => ({
 		title: {
 			type: GraphQLString
@@ -64,7 +64,7 @@ var GraphQLSegment = new GraphQLObjectType({
 
 var GraphQLSegmentInput = new GraphQLInputObjectType({
 	name: 'SegmentInput',
-	description: 'Building description segment',
+	description: 'Project description segment',
 	fields: () => ({
 		title: {
 			type: GraphQLString
@@ -81,9 +81,9 @@ var GraphQLSegmentInput = new GraphQLInputObjectType({
 	})
 });
 
-var GraphQLBuilding = new GraphQLObjectType({
-	name: 'Building',
-	description: 'buildings',
+var GraphQLProject = new GraphQLObjectType({
+	name: 'Project',
+	description: 'projects',
 	fields: () => ({
 		id: {
 			type: GraphQLID,
@@ -132,11 +132,11 @@ var GraphQLBuilding = new GraphQLObjectType({
 });
 
 var {
-	connectionType: BuildingsConnection,
-	edgeType: GraphQLBuildingEdge
+	connectionType: ProjectsConnection,
+	edgeType: GraphQLProjectEdge
 } = connectionDefinitions({
-	name: 'Building',
-	nodeType: GraphQLBuilding
+	name: 'Project',
+	nodeType: GraphQLProject
 });
 
 var GraphQLApp = new GraphQLObjectType({
@@ -156,8 +156,8 @@ var GraphQLApp = new GraphQLObjectType({
 		projectTypes: {
 			type: new GraphQLList(GraphQLString)
 		},
-		buildings: {
-			type: BuildingsConnection,
+		projects: {
+			type: ProjectsConnection,
 			args: {
 				labels: {
 					type: new GraphQLList(GraphQLString)
@@ -165,25 +165,25 @@ var GraphQLApp = new GraphQLObjectType({
 				...connectionArgs
 			},
 			resolve: (app, {labels, ...args}) =>
-				findBuildings(labels)
-					.then(buildings => connectionFromArray(buildings, args))
+				findProjects(labels)
+					.then(projects => connectionFromArray(projects, args))
 		},
 		promotes: {
-			type: BuildingsConnection,
+			type: ProjectsConnection,
 			args: connectionArgs,
 			resolve: (app, args) =>
-				findPromoteBuildings()
-					.then(buildings => connectionFromArray(buildings, args))
+				findPromoteProjects()
+					.then(projects => connectionFromArray(projects, args))
 		},
-		building: {
-			type: GraphQLBuilding,
+		project: {
+			type: GraphQLProject,
 			args: {
 				id: {
 					type: new GraphQLNonNull(GraphQLID)
 				}
 			},
 			resolve: (app, {id}) =>
-				findBuildingById(id).then(building => building)
+				findProjectById(id).then(project => project)
 		}
 	})
 });
@@ -239,8 +239,8 @@ var updateAppMutation = mutationWithClientMutationId({
 	}
 });
 
-var createBuildingMutation = mutationWithClientMutationId({
-	name: 'CreateBuilding',
+var createProjectMutation = mutationWithClientMutationId({
+	name: 'CreateProject',
 	inputFields: {
 		password: {
 			type: new GraphQLNonNull(GraphQLString)
@@ -280,13 +280,13 @@ var createBuildingMutation = mutationWithClientMutationId({
 		}
 	},
 	outputFields: {
-		buildingEdge: {
-			type: GraphQLBuildingEdge,
-			resolve: ({buildingId}) =>
-				findBuildings().then(buildings => {
-						const newBuiding = _.find(buildings, building => building._id.toString() === buildingId.toString());
+		projectEdge: {
+			type: GraphQLProjectEdge,
+			resolve: ({projectId}) =>
+				findProjects().then(projects => {
+						const newBuiding = _.find(projects, project => project._id.toString() === projectId.toString());
 						return {
-							cursor: cursorForObjectInConnection(buildings, newBuiding),
+							cursor: cursorForObjectInConnection(projects, newBuiding),
 							node: newBuiding
 						};
 					})
@@ -298,16 +298,16 @@ var createBuildingMutation = mutationWithClientMutationId({
 	},
 	mutateAndGetPayload: ({password, ...fields}, {rootValue}) => {
 		if (confirmPassword(password)) {
-			return createBuilding(fields, rootValue.request.files)
-				.then(building => ({buildingId: building._id}));
+			return createProject(fields, rootValue.request.files)
+				.then(project => ({projectId: project._id}));
 		} else {
 			return null;
 		}
 	}
 });
 
-var updateBuildingMutation = mutationWithClientMutationId({
-	name: 'UpdateBuilding',
+var updateProjectMutation = mutationWithClientMutationId({
+	name: 'UpdateProject',
 	inputFields: {
 		password: {
 			type: new GraphQLNonNull(GraphQLString)
@@ -356,24 +356,24 @@ var updateBuildingMutation = mutationWithClientMutationId({
 		}
 	},
 	outputFields: {
-		building: {
-			type: GraphQLBuilding,
-			resolve: (buildingId) => findBuildingById(buildingId)
-				.then(building => building)
+		project: {
+			type: GraphQLProject,
+			resolve: (projectId) => findProjectById(projectId)
+				.then(project => project)
 		}
 	},
 	mutateAndGetPayload: ({password, ...fields}, {rootValue}) => {
 		if (confirmPassword(password)) {
-			return updateBuilding(fields, rootValue.request.files)
-				.then(building => building._id);
+			return updateProject(fields, rootValue.request.files)
+				.then(project => project._id);
 		} else {
 			return null;
 		}
 	}
 });
 
-var removeBuildingMutation = mutationWithClientMutationId({
-	name: 'RemoveBuilding',
+var removeProjectMutation = mutationWithClientMutationId({
+	name: 'RemoveProject',
 	inputFields: {
 		password: {
 			type: new GraphQLNonNull(GraphQLString)
@@ -383,19 +383,19 @@ var removeBuildingMutation = mutationWithClientMutationId({
 		}
 	},
 	outputFields: {
-		deletedBuildingId: {
+		deletedProjectId: {
 			type: GraphQLString,
-			resolve: ({buildingId}) => buildingId
+			resolve: ({projectId}) => projectId
 		},
 		app: {
 			type: GraphQLApp,
-			resolve: ({buildingId}) => getApp().then(app => app)
+			resolve: ({projectId}) => getApp().then(app => app)
 		}
 	},
 	mutateAndGetPayload: ({id, password}) => {
 		if (confirmPassword(password)) {
-			return removeBuilding(id)
-				.then(removedBuilding => ({buildingId: id}));
+			return removeProject(id)
+				.then(removedProject => ({projectId: id}));
 		} else {
 			return null;
 		}
@@ -406,9 +406,9 @@ var GraphQLMutationRoot = new GraphQLObjectType({
 	name: 'Mutation',
 	fields: () => ({
 		updateApp: updateAppMutation,
-		createBuilding: createBuildingMutation,
-		updateBuilding: updateBuildingMutation,
-		removeBuilding: removeBuildingMutation
+		createProject: createProjectMutation,
+		updateProject: updateProjectMutation,
+		removeProject: removeProjectMutation
 	})
 });
 

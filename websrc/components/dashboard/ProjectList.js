@@ -5,8 +5,8 @@ import ProjectListItem from './ProjectListItem';
 
 class ProjectList extends React.Component {
 	render() {
-		const buildingItems = this.props.app.buildings.edges.map(({node}, index) =>
-			<ProjectListItem key={index} select={this.props.select} building={node}/>);
+		const projectItems = this.props.app.projects.edges.map(({node}, index) =>
+			<ProjectListItem key={index} select={this.props.select} project={node}/>);
 
 		return (
 			<div>
@@ -17,7 +17,7 @@ class ProjectList extends React.Component {
 							New
 						</div>
 					</ListGroupItem>
-					{buildingItems}
+					{projectItems}
 				</ListGroup>
 			</div>
 		);
@@ -32,10 +32,10 @@ export default Relay.createContainer(ProjectList, {
 	fragments: {
 		app: () => Relay.QL`
 			fragment on App {
-				buildings(first: 1000) {
+				projects(first: 1000) {
 					edges {
 						node {
-							${ProjectListItem.getFragment('building')}
+							${ProjectListItem.getFragment('project')}
 						}
 					}
 				}

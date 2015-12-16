@@ -34,7 +34,7 @@ class ProjectSegmentsEditor extends React.Component {
 	}
 	onPropChanged(props) {
 		return {
-			segments: props.building&&props.building.segments||[]
+			segments: props.project&&props.project.segments||[]
 		};
 	}
 	onSegmentChange(index, del) {
@@ -56,8 +56,8 @@ class ProjectSegmentsEditor extends React.Component {
 
 export default Relay.createContainer(ProjectSegmentsEditor, {
 	fragments: {
-		building: () => Relay.QL`
-			fragment on Building {
+		project: () => Relay.QL`
+			fragment on Project {
 				segments {
 					title,
 					content,

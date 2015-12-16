@@ -9,13 +9,13 @@ class ProjectPage extends React.Component {
 		setTimeout(() => window.scrollTo(0, 0), 10);
 	}
 	render() {
-		const { building, buildings } = this.props.app;
+		const { project, projects } = this.props.app;
 
 		return (
 			<div>
 				<TitleBar title='Arc Studio Project' fixedTop/>
-				<ParallaxBanner style={{marginTop: 50}} height={400} imageUrl={building.banner}/>
-				<ProjectSegments building={building}/>
+				<ParallaxBanner style={{marginTop: 50}} height={400} imageUrl={project.banner}/>
+				<ProjectSegments project={project}/>
 				<br/><br/>
 				<ProjectPager app={this.props.app} currentId={this.props.params.id}/>
 				<br/><br/>
@@ -32,9 +32,9 @@ export default Relay.createContainer(ProjectPage, {
 	fragments: {
 		app: () => Relay.QL`
 			fragment on App {
-				building(id: $id) {
+				project(id: $id) {
 					banner,
-					${ProjectSegments.getFragment('building')}
+					${ProjectSegments.getFragment('project')}
 				},
 				${ProjectPager.getFragment('app')}
 			}
